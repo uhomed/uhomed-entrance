@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<toolbox>
+	<tool>
+		<key>stringUtils</key>
+		<scope>request</scope>
+		<class>org.apache.commons.lang.StringUtils</class>
+	</tool>
+	<tool>
+		<key>dateUtils</key>
+		<scope>request</scope>
+		<class>com.uhomed.entrance.core.utils.DateUtils</class>
+	</tool>
+	<tool>
+		<key>arithUtils</key>
+		<scope>request</scope>
+		<class>com.uhomed.entrance.core.utils.ArithUtils</class>
+	</tool>
+</toolbox> 

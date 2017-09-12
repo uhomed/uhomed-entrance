@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.uhomed.entrance.model.Group">
+
+	<resultMap type="com.uhomed.entrance.model.Group" id="GroupResultMap">
+		<id property="code" column="CODE" />
+		<result property="name" column="NAME" />
+		<result property="createTime" column="CREATE_TIME" />
+	</resultMap>
+
+	<sql id="Group_common_condition">
+		<trim prefix="WHERE" prefixOverrides="AND">
+			<if test="code != null">
+				AND a.CODE = #{code}
+			</if>
+			<if test="likeCode != null">
+				AND a.CODE LIKE CONCAT('%',#{likeCode},'%')
+			</if>
+			<if test="likeName != null">
+				AND a.NAME LIKE CONCAT('%',#{likeName},'%')
+			</if>
+		</trim>
+	</sql>
+	<sql id="Group_common_group">
+		<trim prefix="GROUP BY" prefixOverrides=",">
+		</trim>
+	</sql>
+
+	<select id="query" resultMap="GroupResultMap">
+		SELECT * FROM `SYS_GROUP` a
+		<include refid="Group_common_condition" />
+		<include refid="Group_common_group" />
+	</select>
+
+	<select id="count" resultType="int">
+		SELECT COUNT(1) FROM `SYS_GROUP` a
+		<include refid="Group_common_condition" />
+		<include refid="Group_common_group" />
+	</select>
+
+	<select id="query_id" resultMap="GroupResultMap">
+		SELECT * FROM
+		`SYS_GROUP` a WHERE a.CODE =
+		#{code}
+	</select>
+
+	<insert id="add" parameterType="com.uhomed.entrance.model.Group" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO `SYS_GROUP` (`NAME`,CODE,`CREATE_TIME`) VALUES (#{name},#{code},#{createTime})
+	</insert>
+
+	<delete id="delete" parameterType="com.uhomed.entrance.model.Group">
+		DELETE FROM `SYS_GROUP` WHERE CODE =
+		#{code}
+	</delete>
+
+	<update id="update" parameterType="com.uhomed.entrance.model.Group">
+		UPDATE `SYS_GROUP`
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="name != null">
+				`NAME` = #{name},
+			</if>
+		</trim>
+		WHERE CODE = #{code}
+	</update>
+
+</mapper>

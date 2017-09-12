@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.uhomed.entrance.model.MethodDubbo">
+
+	<resultMap type="com.uhomed.entrance.model.MethodDubbo" id="MethodDubboResultMap">
+		<id property="methodId" column="METHOD_ID" />
+		<result property="classPath" column="CLASS_PATH" />
+		<result property="methodName" column="METHOD_NAME" />
+	</resultMap>
+
+	<sql id="MethodDubbo_common_condition">
+		<trim prefix="WHERE" prefixOverrides="AND">
+			
+		</trim>
+	</sql>
+	<sql id="MethodDubbo_common_group">
+		<trim prefix="GROUP BY" prefixOverrides=",">
+		</trim>
+	</sql>
+
+	<select id="query" resultMap="MethodDubboResultMap">
+		SELECT * FROM `METHOD_DUBBO` a
+		<include refid="MethodDubbo_common_condition" />
+		<include refid="MethodDubbo_common_group" />
+	</select>
+
+	<select id="count" resultType="int">
+		SELECT COUNT(1) FROM `METHOD_DUBBO` a
+		<include refid="MethodDubbo_common_condition" />
+		<include refid="MethodDubbo_common_group" />
+	</select>
+
+	<select id="query_id" resultMap="MethodDubboResultMap">
+		SELECT * FROM
+		`METHOD_DUBBO` a WHERE a.METHOD_ID =
+		#{methodId}
+	</select>
+
+	<insert id="add" parameterType="com.uhomed.entrance.model.MethodDubbo" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO `METHOD_DUBBO` (`METHOD_ID`,`CLASS_PATH`,`METHOD_NAME`) VALUES (#{methodId},#{classPath},#{methodName})
+	</insert>
+
+	<delete id="delete" parameterType="com.uhomed.entrance.model.MethodDubbo">
+		DELETE FROM `METHOD_DUBBO` WHERE METHOD_ID =
+		#{methodId}
+	</delete>
+
+	<update id="update" parameterType="com.uhomed.entrance.model.MethodDubbo">
+		UPDATE `METHOD_DUBBO`
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="classPath != null">
+				`CLASS_PATH` = #{classPath},
+			</if>
+			<if test="methodName != null">
+				`METHOD_NAME` = #{methodName},
+			</if>
+		</trim>
+		WHERE METHOD_ID = #{methodId}
+	</update>
+
+</mapper>

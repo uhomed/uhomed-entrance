@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans   
+                        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd  
+                        http://www.springframework.org/schema/mvc  
+                        http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd  
+                        http://www.springframework.org/schema/context   
+                        http://www.springframework.org/schema/context/spring-context-3.0.xsd
+                        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd">
+	<!-- 启动Spring的组件自动扫描机制。Spring会自动扫描base-package指定的包中的类和子包里面类 -->
+	<!-- 此处可参考我的文章http://blog.csdn.net/jadyer/article/details/6038604 -->
+	<context:component-scan base-package="com.uhomed.entrance.web" />
+
+	<!-- 启动SpringMVC的注解功能，它会自动注册HandlerMapping、HandlerAdapter、ExceptionResolver的相关实例 -->
+	<!-- <mvc:annotation-driven /> -->
+	<!-- 使用CGLIB动态代理AOP -->
+	<aop:aspectj-autoproxy proxy-target-class="true" />
+
+	<!-- 上传 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- one of the properties available; the maximum file size in bytes -->
+		<property name="maxUploadSize" value="104857600" />
+		<property name="maxInMemorySize" value="4096" />
+		<property name="defaultEncoding" value="UTF-8" />
+	</bean>
+
+	<!-- begin ViewResolver配置 -->
+	<bean id="contentNegotiationManager"
+		class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+		<property name="favorPathExtension" value="true" />
+		<property name="parameterName" value="format" />
+		<property name="favorParameter" value="true" />
+		<property name="ignoreAcceptHeader" value="true" />
+		<property name="defaultContentType" value="application/json" />
+
+		<property name="mediaTypes">
+			<map>
+				<entry key="xml" value="application/xml" />
+				<entry key="json" value="application/json" />
+				<entry key="jsonp" value="application/javascript" />
+				<entry key="html" value="text/html" />
+			</map>
+		</property>
+	</bean>
+
+
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+		<property name="contentNegotiationManager" ref="contentNegotiationManager" />
+		<!-- 自定义的ViewResolver放在这里 -->
+		<property name="viewResolvers">
+			<list>
+				<bean id="velocityViewResolver"
+					class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+					<property name="suffix" value=".vm" />
+					<property name="contentType" value="text/html;charset=UTF-8" />
+					<!-- spring的日期格式化 -->
+					<property name="dateToolAttribute" value="dateTool" />
+					<property name="toolboxConfigLocation" value="/WEB-INF/toolbox.xml" />
+				</bean>
+			</list>
+		</property>
+		<property name="defaultViews">
+			<list>
+				<bean class="com.alibaba.fastjson.support.spring.FastJsonJsonView" />
+				<bean class="com.uhomed.entrance.core.fastjson.FastJsonJsonpView" />
+				<bean class="org.springframework.web.servlet.view.xml.MarshallingView">
+					<property name="marshaller">
+						<bean class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+							<property name="packagesToScan" value="com.uhomed.entrance.web"></property>
+						</bean>
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<!-- <mvc:resources mapping="/favicon.ico" location="/favicon.ico" /> -->
+
+	<!-- <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver"> 
+		定义默认的异常处理页面，当该异常类型的注册时使用 <property name="defaultErrorView" value="error"></property> 
+		定义异常处理页面用来获取异常信息的变量名，默认名为exception <property name="exceptionAttribute" value="ex"></property> 
+		定义需要特殊处理的异常，用类名或完全路径名作为key，异常也页名作为值 <property name="exceptionMappings"> <props> 
+		<prop key="com.atxiaoge.webserver.web.exception.ControllerException">error-controller</prop> 
+		</props> </property> </bean> -->
+
+	<bean id="controllerExceptionHandler"
+		class="com.uhomed.entrance.web.exception.ControllerExceptionHanlder" />
+
+	<bean id="conversionService"
+		class="org.springframework.format.support.DefaultFormattingConversionService" />
+
+	<!-- 更换fastjson参数解析 -->
+	<!-- mvc:annotation-driven 需要放在下边 -->
+	<bean
+		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+		<property name="webBindingInitializer">
+			<bean
+				class="org.springframework.web.bind.support.ConfigurableWebBindingInitializer">
+				<property name="conversionService" ref="conversionService" />
+			</bean>
+		</property>
+		<property name="messageConverters">
+			<list>
+				<!-- <bean id="stringHttpMessageConverter" -->
+				<!-- class="org.springframework.http.converter.StringHttpMessageConverter" 
+					/> -->
+				<bean
+					class="org.springframework.http.converter.StringHttpMessageConverter">
+					<property name="supportedMediaTypes">
+						<list>
+							<value>text/plain;charset=UTF-8</value>
+							<value>text/html;charset=UTF-8</value>
+							<value>application/xml;charset=UTF-8</value>
+							<value>text/xml</value>
+						</list>
+					</property>
+				</bean>
+				<bean
+					class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+					<!-- MediaTypes -->
+					<property name="supportedMediaTypes">
+						<list>
+							<value>application/json</value>
+						</list>
+					</property>
+				</bean>
+
+			</list>
+		</property>
+	</bean>
+	<!-- end -->
+	<!-- 启动SpringMVC的注解功能，它会自动注册HandlerMapping、HandlerAdapter、ExceptionResolver的相关实例 -->
+	<mvc:annotation-driven />
+
+</beans>  

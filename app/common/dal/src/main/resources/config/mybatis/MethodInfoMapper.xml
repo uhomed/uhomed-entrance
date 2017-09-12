@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.uhomed.entrance.model.MethodInfo">
+
+	<resultMap type="com.uhomed.entrance.model.MethodInfo" id="MethodInfoResultMap">
+		<id property="id" column="ID" />
+		<result property="apiMethodCode" column="API_METHOD_CODE" />
+		<result property="apiMethodName" column="API_METHOD_NAME" />
+		<result property="apiMethodVersion" column="API_METHOD_VERSION" />
+		<result property="status" column="STATUS" />
+		<result property="verifiSso" column="VERIFI_SSO" />
+		<result property="mode" column="MODE" />
+		<result property="type" column="TYPE" />
+		<result property="methodDesc" column="METHOD_DESC" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="groupCode" column="GROUP_CODE" />
+
+	</resultMap>
+
+	<sql id="MethodInfo_common_condition">
+		<trim prefix="WHERE" prefixOverrides="AND">
+			<if test="status != null">
+				AND a.STATUS = #{status}
+			</if>
+			<if test="groupCode != null">
+				AND a.GROUP_CODE = #{groupCode}
+			</if>
+			<if test="apiMethodCode != null">
+				AND a.API_METHOD_CODE = #{apiMethodCode}
+			</if>
+			<if test="apiMethodVersion != null">
+				AND a.API_METHOD_VERSION = #{apiMethodVersion}
+			</if>
+			<if test="likeApiMethodCode != null" >
+				AND a.API_METHOD_CODE LIKE CONCAT('%',#{likeApiMethodCode},'%')
+			</if>
+			<if test="likeApiMethodName != null">
+				AND a.API_METHOD_NAME LIKE CONCAT('%',#{likeApiMethodName},'%')
+			</if>
+		</trim>
+	</sql>
+	<sql id="MethodInfo_common_group">
+		<trim prefix="GROUP BY" prefixOverrides=",">
+		</trim>
+	</sql>
+
+	<select id="query" resultMap="MethodInfoResultMap">
+		SELECT * FROM `METHOD_INFO` a
+		<include refid="MethodInfo_common_condition" />
+		<include refid="MethodInfo_common_group" />
+		ORDER BY a.ID DESC
+	</select>
+
+	<select id="count" resultType="int">
+		SELECT COUNT(1) FROM `METHOD_INFO` a
+		<include refid="MethodInfo_common_condition" />
+		<include refid="MethodInfo_common_group" />
+	</select>
+
+	<select id="query_id" resultMap="MethodInfoResultMap">
+		SELECT * FROM
+		`METHOD_INFO` a WHERE a.ID =
+		#{id}
+	</select>
+
+	<insert id="add" parameterType="com.uhomed.entrance.model.MethodInfo" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO `METHOD_INFO` (`API_METHOD_CODE`,`API_METHOD_NAME`,`API_METHOD_VERSION`,`STATUS`,`VERIFI_SSO`,`MODE`,`METHOD_DESC`,`CREATE_TIME`,`TYPE`,`GROUP_CODE`) VALUES (#{apiMethodCode},#{apiMethodName},#{apiMethodVersion},#{status},#{verifiSso},#{mode},#{methodDesc},#{createTime},#{type},#{groupCode})
+	</insert>
+
+	<delete id="delete" parameterType="com.uhomed.entrance.model.MethodInfo">
+		DELETE FROM `METHOD_INFO` WHERE ID =
+		#{id}
+	</delete>
+
+	<update id="update" parameterType="com.uhomed.entrance.model.MethodInfo">
+		UPDATE `METHOD_INFO`
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="apiMethodCode != null">
+				`API_METHOD_CODE` = #{apiMethodCode},
+			</if>
+			<if test="apiMethodName != null">
+				`API_METHOD_NAME` = #{apiMethodName},
+			</if>
+			<if test="apiMethodVersion != null">
+				`API_METHOD_VERSION` = #{apiMethodVersion},
+			</if>
+			<if test="status != null">
+				`STATUS` = #{status},
+			</if>
+			<if test="verifiSso != null">
+				`VERIFI_SSO` = #{verifiSso},
+			</if>
+			<if test="mode != null">
+				`MODE` = #{mode},
+			</if>
+			<if test="methodDesc != null">
+				`METHOD_DESC` = #{methodDesc},
+			</if>
+			<if test="createTime != null">
+				`CREATE_TIME` = #{createTime},
+			</if>
+			<if test="type != null">
+				`TYPE` = #{type},
+			</if>
+		</trim>
+		WHERE ID = #{id}
+	</update>
+
+</mapper>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.uhomed.entrance.model.MethodParam">
+
+	<resultMap type="com.uhomed.entrance.model.MethodParam" id="MethodParamResultMap">
+		<id property="id" column="ID" />
+		<result property="methodId" column="METHOD_ID" />
+		<result property="paramCode" column="PARAM_CODE" />
+		<result property="paramName" column="PARAM_NAME" />
+		<result property="paramType" column="PARAM_TYPE" />
+		<result property="paramIndex" column="PARAM_INDEX" />
+		<result property="paramRequire" column="PARAM_REQUIRE" />
+		<result property="length" column="LENGTH" />
+	</resultMap>
+
+	<sql id="MethodParam_common_condition">
+		<trim prefix="WHERE" prefixOverrides="AND">
+			<if test="methodId != null">
+				AND a.METHOD_ID = #{methodId}
+			</if>
+		</trim>
+	</sql>
+	<sql id="MethodParam_common_group">
+		<trim prefix="GROUP BY" prefixOverrides=",">
+		</trim>
+	</sql>
+
+	<select id="query" resultMap="MethodParamResultMap">
+		SELECT * FROM `METHOD_PARAM` a
+		<include refid="MethodParam_common_condition" />
+		<include refid="MethodParam_common_group" />
+	</select>
+
+	<select id="count" resultType="int">
+		SELECT COUNT(1) FROM `METHOD_PARAM` a
+		<include refid="MethodParam_common_condition" />
+		<include refid="MethodParam_common_group" />
+	</select>
+
+	<select id="query_id" resultMap="MethodParamResultMap">
+		SELECT * FROM
+		`METHOD_PARAM` a WHERE a.ID =
+		#{id}
+	</select>
+
+	<insert id="add" parameterType="com.uhomed.entrance.model.MethodParam" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO `METHOD_PARAM` (`ID`,`METHOD_ID`,`PARAM_CODE`,`PARAM_NAME`,`PARAM_TYPE`,`PARAM_INDEX`,`PARAM_REQUIRE`,`LENGTH`) VALUES (#{id},#{methodId},#{paramCode},#{paramName},#{paramType},#{paramIndex},#{paramRequire},#{length})
+	</insert>
+
+	<delete id="delete" parameterType="com.uhomed.entrance.model.MethodParam">
+		DELETE FROM `METHOD_PARAM` WHERE ID =
+		#{id}
+	</delete>
+
+	<update id="update" parameterType="com.uhomed.entrance.model.MethodParam">
+		UPDATE `METHOD_PARAM`
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="methodId != null">
+				`METHOD_ID` = #{methodId},
+			</if>
+			<if test="paramCode != null">
+				`PARAM_CODE` = #{paramCode},
+			</if>
+			<if test="paramName != null">
+				`PARAM_NAME` = #{paramName},
+			</if>
+			<if test="paramType != null">
+				`PARAM_TYPE` = #{paramType},
+			</if>
+			<if test="paramRequire != null">
+				`PARAM_REQUIRE` = #{paramRequire},
+			</if>
+			<if test="paramIndex != null">
+				`PARAM_INDEX` = #{paramIndex},
+			</if>
+			<if test="length != null">
+				`LENGTH` = #{length},
+			</if>
+		</trim>
+		WHERE ID = #{id}
+	</update>
+
+</mapper>
