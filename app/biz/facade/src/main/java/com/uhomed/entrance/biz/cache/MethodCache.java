@@ -37,10 +37,4 @@ public class MethodCache {
         return Joiner.on("_").join(apiMethodCode,apiMethodVersion);
     }
 
-    public void putMethodParams(String apiMethodCode,String apiMethodVersion,List<MethodParamCacheDTO> params){
-        MethodCacheDTO cache = this.methodCache.get(this.buildKey(apiMethodCode,apiMethodVersion));
-        cache.setParams(params);
-    }
-
-
 }

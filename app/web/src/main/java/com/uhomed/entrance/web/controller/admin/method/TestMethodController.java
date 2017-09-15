@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import com.alibaba.fastjson.JSON;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,7 +57,7 @@ public class TestMethodController extends BaseController {
 		if (cache.getParams() != null) {
 			for (int i = 0; i < cache.getParams().size(); i++) {
 				MethodParamCacheDTO p = cache.getParams().get( i );
-				keys.add( p.getClazz().getClass().toString() );
+				keys.add( p.getClazz().getClass().getName() );
 				values.add( null );
 			}
 		}
@@ -64,8 +65,6 @@ public class TestMethodController extends BaseController {
 		if (cache.isVerifiSso()) {
 			RpcContext.getContext().setAttachment( "sso", "test-logon" );
 		}
-		
-//		String genericKey = Joiner.on( '_' ).join( cache.getApiMethodCode(), cache.getApiMethodVersion() );
 		
 		GenericService genericService = GenericServiceFactory.getInstance( cache.getId().toString() );
 		try {
@@ -75,12 +74,19 @@ public class TestMethodController extends BaseController {
 			keys.toArray( ks );
 			Object o = genericService.$invoke( dubbo.getMethodName(), ks, values.toArray() );
 			if (o != null) {
-				super.setSuccessful( result, "该方法可用！" );
+				super.setSuccessful( result, "该方法可用！,返回值：" + JSON.toJSONString(o) );
 			} else {
 				super.setFailMessage( result, "该方法不可用！" );
 			}
-		} catch (RpcException rpcException) {
-			super.setFailMessage( result, rpcException.getMessage() );
+		} catch (RpcException e) {
+			if(e.getMessage().contains("Please check if the providers have been started and registered.")){
+				super.setFailMessage(result,"未在注册中心发现该接口");
+			}else if(e.getMessage().contains("Failed to invoke remote method")){
+				super.setFailMessage(result,"发现服务提供者，未发现该方法");
+			}else {
+				super.setFailMessage( result, e.getMessage() );
+			}
+
 		} catch (GenericException ex) {
 			super.setSuccessful( result, "该方法可用！" );
 		} catch (NullPointerException e) {

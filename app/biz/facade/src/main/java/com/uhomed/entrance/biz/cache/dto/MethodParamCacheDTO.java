@@ -15,11 +15,13 @@ public class MethodParamCacheDTO implements Serializable {
 	/** 参数名 */
 	private String				code;
 	/** 参数类型 */
-	private Object				clazz;
+	private String				clazz;
 	/** 最大长度（string时生效） */
 	private Integer				length;
 	/** 是否必传 */
 	private boolean				require;
+	/** 默认值 */
+	private String				defaultValue;
 	
 	/**
 	 * Instantiates a new MethodDTO param cache dto.
@@ -28,12 +30,32 @@ public class MethodParamCacheDTO implements Serializable {
 	 * @param clazz the clazz
 	 * @param length the length
 	 * @param require the require
+	 * @param defaultValue the default value
 	 */
-	public MethodParamCacheDTO(String code, Object clazz, Integer length, boolean require) {
+	public MethodParamCacheDTO(String code, String clazz, Integer length, boolean require, String defaultValue) {
 		this.code = code;
 		this.clazz = clazz;
 		this.length = length;
 		this.require = require;
+		this.defaultValue = defaultValue;
+	}
+	
+	/**
+	 * Gets default value.
+	 *
+	 * @return the default value
+	 */
+	public String getDefaultValue() {
+		return defaultValue;
+	}
+	
+	/**
+	 * Sets default value.
+	 *
+	 * @param defaultValue the default value
+	 */
+	public void setDefaultValue(String defaultValue) {
+		this.defaultValue = defaultValue;
 	}
 	
 	/**
@@ -104,16 +126,8 @@ public class MethodParamCacheDTO implements Serializable {
 	 *
 	 * @return the clazz
 	 */
-	public Object getClazz() {
+	public String getClazz() {
 		return clazz;
 	}
 	
-	/**
-	 * Sets clazz.
-	 *
-	 * @param clazz the clazz
-	 */
-	public void setClazz(Object clazz) {
-		this.clazz = clazz;
-	}
 }

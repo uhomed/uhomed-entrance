@@ -21,12 +21,15 @@ import com.uhomed.entrance.biz.facade.MethodFacade;
 import com.uhomed.entrance.biz.service.MethodDubboService;
 import com.uhomed.entrance.biz.service.MethodInfoService;
 import com.uhomed.entrance.biz.service.MethodParamService;
+import com.uhomed.entrance.core.utils.BeanUtil;
 import com.uhomed.entrance.core.utils.PageModel;
 import com.uhomed.entrance.dal.result.Result;
 import com.uhomed.entrance.model.MethodDubbo;
 import com.uhomed.entrance.model.MethodInfo;
 import com.uhomed.entrance.model.MethodParam;
 import com.uhomed.entrance.view.MethodInfoView;
+import com.uhomed.entrance.view.MethodParamView;
+import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
@@ -95,7 +98,7 @@ public class MethodFacadeImpl implements MethodFacade {
 	
 	@Override
 	public Result<String> updateMethod(Integer id, String apiMethodCode, String apiMethodName, String apiMethodVersion, String status,
-			String verifiSso, String mode, String methodDesc, String type,String classPath, String methodName) {
+			String verifiSso, String mode, String methodDesc, String type, String classPath, String methodName, List<MethodParam> paramList) {
 		Result<String> result = new Result<>();
 		
 		MethodInfo methodInfo = new MethodInfo();
@@ -108,18 +111,40 @@ public class MethodFacadeImpl implements MethodFacade {
 		methodInfo.setMode( mode );
 		methodInfo.setType( type );
 		methodInfo.setId( id );
-		
+
 		int count = (int) this.methodInfoService.update( methodInfo );
 		if (count > 0) {
-			MethodDubbo vo = new MethodDubbo();
-			vo.setMethodId(id);
-			vo.setClassPath(classPath);
-			vo.setMethodName(methodName);
-			this.methodDubboService.update(vo);
-
-			this.refreshMethodCache(methodInfo);
 			result.setSuccess( true );
 			result.setMessage( "更新方法成功！" );
+			
+			// TODO 如果只单是更新状态，则不更新dubbo
+			if (StrUtil.isNotEmpty( classPath )) {
+				MethodDubbo vo = new MethodDubbo();
+				vo.setMethodId( id );
+				vo.setClassPath( classPath );
+				vo.setMethodName( methodName );
+				this.methodDubboService.update( vo );
+				
+				MethodParam del = new MethodParam();
+				del.setMethodId( id );
+				this.methodParamService.delete( del, false );
+				
+				// 更新参数
+				if (CollectionUtil.isNotEmpty( paramList )) {
+					List<MethodParam> creates = new ArrayList<>();
+					for (int i = 0; i < paramList.size(); i++) {
+						MethodParam param = paramList.get( i );
+						param.setParamIndex( i + 1 );
+						param.setMethodId( id );
+						creates.add( param );
+					}
+					if (CollectionUtil.isNotEmpty( creates )) {
+						this.methodParamService.batchCreate( creates );
+					}
+				}
+			}
+			
+			this.refreshMethodCache( id );
 		} else {
 			result.setMessage( "更新方法失败！" );
 		}
@@ -161,18 +186,18 @@ public class MethodFacadeImpl implements MethodFacade {
 	
 	@Override
 	public Result<Integer> createMethodDubbo(String groupCode, String apiMethodCode, String apiMethodName, String apiMethodVersion, String status,
-			String verifiSso, String mode, String methodDesc, String classPath, String methodName) {
+			String verifiSso, String mode, String methodDesc, String classPath, String methodName, List<MethodParam> paramList) {
 		Result<Integer> result = new Result<>();
-		Map<String,Object > params = new HashMap<>();
-		params.put("groupCode",groupCode);
-		params.put("apiMethodCode",apiMethodCode);
-		params.put("apiMethodVersion",apiMethodVersion);
-		int count = this.methodInfoService.queryByCount(params);
-		if(count > 0){
-			result.setMessage("该code和版本号已存在！");
+		Map<String, Object> params = new HashMap<>();
+		params.put( "groupCode", groupCode );
+		params.put( "apiMethodCode", apiMethodCode );
+		params.put( "apiMethodVersion", apiMethodVersion );
+		int count = this.methodInfoService.queryByCount( params );
+		if (count > 0) {
+			result.setMessage( "该code和版本号已存在！" );
 			return result;
 		}
-
+		
 		result = this.createMethod( groupCode, apiMethodCode, apiMethodName, apiMethodVersion, status, verifiSso, mode, methodDesc,
 				MethodTypeContext.DUBBO.toString() );
 		
@@ -183,9 +208,19 @@ public class MethodFacadeImpl implements MethodFacade {
 			dubbo.setClassPath( classPath );
 			dubbo.setMethodName( methodName );
 			this.methodDubboService.create( dubbo );
+			// 添加参数
+			if (CollectionUtil.isNotEmpty( paramList )) {
+				int i = 1;
+				for (MethodParam methodParam : paramList) {
+					methodParam.setMethodId( result.getData() );
+					methodParam.setParamIndex( i );
+					i++;
+				}
+				this.methodParamService.batchCreate( paramList );
+			}
+			
 			// 添加到缓存
 			this.refreshMethodCache( result.getData() );
-			// TODO 生成gs
 		}
 		return result;
 	}
@@ -203,7 +238,9 @@ public class MethodFacadeImpl implements MethodFacade {
 			dubbo.setMethodId( id );
 			dubbo.setClassPath( classPath );
 			dubbo.setMethodName( methodName );
-			this.methodDubboService.update( dubbo );
+			if (dubbo.getClassPath() != null || dubbo.getMethodName() != null) {
+				this.methodDubboService.update( dubbo );
+			}
 			// 添加到缓存
 			this.refreshMethodCache( id );
 			
@@ -238,7 +275,6 @@ public class MethodFacadeImpl implements MethodFacade {
 		params.addAll( creates );
 		params.addAll( updates );
 		this.methodParam2Cache( params );
-		
 		result.setMessage( "更新成功！" );
 		result.setSuccess( true );
 		return result;
@@ -257,7 +293,7 @@ public class MethodFacadeImpl implements MethodFacade {
 		}
 		for (MethodParam param : params) {
 			result.add( new MethodParamCacheDTO( param.getParamCode(), ParamClazzContext.getClazz( param.getParamType() ), param.getLength(),
-					StringUtils.equals( param.getParamRequire(), "Y" ) ) );
+					StringUtils.equals( param.getParamRequire(), "Y" ),param.getDefaultValue() ) );
 		}
 		return result;
 	}
@@ -275,8 +311,9 @@ public class MethodFacadeImpl implements MethodFacade {
 			MethodDubbo dubbo = this.methodDubboService.findById( method.getId() );
 			
 			MethodDTO m = new MethodDubboDTO( dubbo.getClassPath(), dubbo.getMethodName() );
-			this.methodCache.putMethod(method.getId(),method.getApiMethodCode(), method.getApiMethodVersion(), method.getStatus(), method.getVerifiSso(),
-					MethodTypeContext.DUBBO, method.getMode(), this.methodParam2Cache( this.methodParamService.queryByPage( params, -1, -1 ) ), m );
+			this.methodCache.putMethod( method.getId(), method.getApiMethodCode(), method.getApiMethodVersion(), method.getStatus(),
+					method.getVerifiSso(), MethodTypeContext.DUBBO, method.getMode(),
+					this.methodParam2Cache( this.methodParamService.queryByPage( params, -1, -1 ) ), m );
 		}
 		
 	}
@@ -316,10 +353,24 @@ public class MethodFacadeImpl implements MethodFacade {
 			this.refreshMethodCache( data );
 		}
 	}
-
-
+	
 	@Override
 	public MethodDubbo queryMethodDubboById(Integer id) {
-		return this.methodDubboService.findById(id);
+		return this.methodDubboService.findById( id );
+	}
+	
+	@Override
+	public Result<Integer> updateParams(List<MethodParam> params) {
+		return null;
+	}
+	
+	@Override
+	public List<MethodParamView> queryParams(Integer methodId) {
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put( "methodId", methodId );
+		List<MethodParam> datas = this.methodParamService.queryByPage( params, -1, -1 );
+		
+		return BeanUtil.convertList( datas, MethodParamView.class );
 	}
 }

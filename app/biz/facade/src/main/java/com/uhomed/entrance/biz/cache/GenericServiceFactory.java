@@ -47,7 +47,6 @@ public class GenericServiceFactory {
      */
     public static GenericService buildGenericService(MethodCacheDTO p){
 
-//        String genericKey = Joiner.on('_').join(p.getApiMethodCode(), p.getApiMethodVersion());
         String genericKey = p.getId().toString();
         GenericService gs = GENERIC_SERVICE.get( genericKey );
         if (gs != null) {
@@ -75,7 +74,7 @@ public class GenericServiceFactory {
             if (REFERENCE_CONFIG_CACHE.containsKey(key)) {
                 reference = REFERENCE_CONFIG_CACHE.get(key);
             } else {
-                reference = new ReferenceConfig<GenericService>();
+                reference = new ReferenceConfig<>();
                 reference.setInterface(interfaceName);
                 reference.setGeneric(true);
                 reference.setApplication(applicationConfig);

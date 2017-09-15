@@ -63,7 +63,7 @@ public class GatewayController extends BaseController {
 		}
 
 
-		MethodCacheDTO methodDTO = this.methodCache.getMethod( method, version );
+		MethodCacheDTO methodDTO = this.methodCache.getMethod(method, version);
 		if (methodDTO == null) {
 			super.setFailMessage( result, "该方法不存在或未开放！" );
 			return result;
@@ -81,7 +81,7 @@ public class GatewayController extends BaseController {
 			}
 		}
 		
-		if (methodDTO.isStatus()) {
+		if (!methodDTO.isStatus()) {
 			super.setFailMessage( result, "该方法未开放！" );
 			return result;
 		}
@@ -97,8 +97,6 @@ public class GatewayController extends BaseController {
 			}
 		} catch (ParamException e) {
 			super.setFailMessage( result, e.getMessage() );
-		} catch (RpcException e) {
-			super.setFailMessage( result, "网络异常，请稍候再试！", "100001" );
 		} catch (Exception e) {
 			super.setFailMessage( result, "网络异常，请稍候再试！", "100001" );
 		}

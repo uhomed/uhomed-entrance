@@ -1,4 +1,4 @@
-package com.uhomed.entrance.model;
+package com.uhomed.entrance.view;
 
 import java.io.Serializable;
 
@@ -8,9 +8,9 @@ import java.io.Serializable;
  * @author
  * @version $$Id : , v 0.1 Exp $$
  */
-public class MethodParam implements Serializable {
+public class MethodParamView implements Serializable {
 	
-	private static final long	serialVersionUID	= -130188381168190785L;
+	private static final long	serialVersionUID	= -5951749603241860767L;
 	/** 主键id */
 	private Integer				id;
 	/** 方法名 */
