@@ -18,11 +18,11 @@ public class LoadConfig {
 
 	private static LoadConfig loadServiceInfo = new LoadConfig();
 
-//	private final static String DEFAULT_NAME = "/root/antx.properties";
+	private final static String DEFAULT_NAME = "/root/antx.properties";
 	
 //	private final static String DEFAULT_NAME = "D:/workspace/antx.properties";
 	//config antx地址
-	private final static String DEFAULT_NAME = "/Users/liming/conf/uhomed-entrance/antx.properties";
+//	private final static String DEFAULT_NAME = "/Users/liming/conf/uhomed-entrance/antx.properties";
 
 	public LoadConfig() {
 		this.init(DEFAULT_NAME);

@@ -31,7 +31,8 @@
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="locations">
 			<list>
-				<value>file:/Users/liming/conf/uhomed-entrance/antx.properties</value>
+				<!--<value>file:/Users/liming/conf/uhomed-entrance/antx.properties</value>-->
+				<value>file:/root/antx.properties</value>
 			</list>
 		</property>
 	</bean>
