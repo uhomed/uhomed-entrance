@@ -49,10 +49,10 @@ public class RequestDubbo implements Request {
 				throw new ParamException( "bizParams解析错误！" );
 			}
 			for (MethodParamCacheDTO p : paramList) {
-				paramsType.add( p.getClazz() );
+				paramsType.add( p.getClazz().getClass().getName() );
 				// 是否是自定义对象
 				try {
-					if (!StrUtil.equals(p.getClazz(),Object.class.getName())) {
+					if (p.getClazz() instanceof Number || p.getClazz() instanceof Date || p.getClazz() instanceof String || p.getClazz() instanceof Collection || p.getClazz() instanceof Boolean) {
 						Object value = json.getObject( p.getCode(), p.getClazz().getClass() );
 
 						if(StrUtil.isNotEmpty(p.getDefaultValue()) && value == null){

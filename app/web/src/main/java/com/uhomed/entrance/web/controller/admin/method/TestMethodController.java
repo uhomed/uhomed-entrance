@@ -81,8 +81,10 @@ public class TestMethodController extends BaseController {
 		} catch (RpcException e) {
 			if(e.getMessage().contains("Please check if the providers have been started and registered.")){
 				super.setFailMessage(result,"未在注册中心发现该接口");
+				e.printStackTrace();
 			}else if(e.getMessage().contains("Failed to invoke remote method")){
 				super.setFailMessage(result,"发现服务提供者，未发现该方法");
+				e.printStackTrace();
 			}else {
 				super.setFailMessage( result, e.getMessage() );
 			}

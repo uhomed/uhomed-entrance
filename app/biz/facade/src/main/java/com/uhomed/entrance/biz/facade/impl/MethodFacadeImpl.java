@@ -292,7 +292,29 @@ public class MethodFacadeImpl implements MethodFacade {
 			return null;
 		}
 		for (MethodParam param : params) {
-			result.add( new MethodParamCacheDTO( param.getParamCode(), ParamClazzContext.getClazz( param.getParamType() ), param.getLength(),
+			Object o = null;
+			if(Float.class.getName().equalsIgnoreCase(ParamClazzContext.getClazz( param.getParamType() ))){
+				o = new Float(0);
+			}else if(Double.class.getName().equalsIgnoreCase(ParamClazzContext.getClazz( param.getParamType() ))){
+				o = new Double(0);
+			}else if(Integer.class.getName().equalsIgnoreCase(ParamClazzContext.getClazz( param.getParamType() ))){
+				o = new Integer(0);
+			}else if(Long.class.getName().equalsIgnoreCase(ParamClazzContext.getClazz( param.getParamType() ))){
+				o = new Long(0);
+			} else if(Boolean.class.getName().equalsIgnoreCase(ParamClazzContext.getClazz( param.getParamType() ))){
+				o = new Boolean(false);
+			}else {
+				try {
+					o = Class.forName(ParamClazzContext.getClazz( param.getParamType() )).newInstance();
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				} catch (InstantiationException e) {
+					e.printStackTrace();
+				}
+			}
+			result.add( new MethodParamCacheDTO( param.getParamCode(), o, param.getLength(),
 					StringUtils.equals( param.getParamRequire(), "Y" ),param.getDefaultValue() ) );
 		}
 		return result;

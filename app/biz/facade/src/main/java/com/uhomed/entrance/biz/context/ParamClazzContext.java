@@ -21,7 +21,7 @@ public class ParamClazzContext {
         clazzMap.put("Long","java.lang.Long");
         clazzMap.put("Boolean","java.lang.Boolean");
         clazzMap.put("Date","java.util.Date");
-        clazzMap.put("List","java.util.List");
+        clazzMap.put("List","java.util.ArrayList");
         clazzMap.put("Object","java.lang.Object");
     }
 
