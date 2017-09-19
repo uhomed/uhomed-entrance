@@ -57,7 +57,7 @@ public class TestMethodController extends BaseController {
 		if (cache.getParams() != null) {
 			for (int i = 0; i < cache.getParams().size(); i++) {
 				MethodParamCacheDTO p = cache.getParams().get( i );
-				keys.add( p.getClazz().getClass().getName() );
+				keys.add( p.getClazzStr() );
 				values.add( null );
 			}
 		}
@@ -74,7 +74,8 @@ public class TestMethodController extends BaseController {
 			keys.toArray( ks );
 			Object o = genericService.$invoke( dubbo.getMethodName(), ks, values.toArray() );
 			if (o != null) {
-				super.setSuccessful( result, "该方法可用！,返回值：" + JSON.toJSONString(o) );
+//				super.setSuccessful( result, "该方法可用！,返回值：" + JSON.toJSONString(o) );
+				super.setSuccessful( result, "该方法可用！" );
 			} else {
 				super.setFailMessage( result, "该方法不可用！" );
 			}

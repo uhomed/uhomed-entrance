@@ -22,6 +22,8 @@ public class MethodParamCacheDTO implements Serializable {
 	private boolean				require;
 	/** 默认值 */
 	private String				defaultValue;
+	/** 包名类名 */
+	private String				clazzStr;
 	
 	/**
 	 * Instantiates a new MethodDTO param cache dto.
@@ -31,13 +33,33 @@ public class MethodParamCacheDTO implements Serializable {
 	 * @param length the length
 	 * @param require the require
 	 * @param defaultValue the default value
+	 * @param clazzStr the clazz str
 	 */
-	public MethodParamCacheDTO(String code, Object clazz, Integer length, boolean require, String defaultValue) {
+	public MethodParamCacheDTO(String code, Object clazz, Integer length, boolean require, String defaultValue, String clazzStr) {
 		this.code = code;
 		this.clazz = clazz;
 		this.length = length;
 		this.require = require;
 		this.defaultValue = defaultValue;
+		this.clazzStr = clazzStr;
+	}
+	
+	/**
+	 * Gets clazz str.
+	 *
+	 * @return the clazz str
+	 */
+	public String getClazzStr() {
+		return clazzStr;
+	}
+	
+	/**
+	 * Sets clazz str.
+	 *
+	 * @param clazzStr the clazz str
+	 */
+	public void setClazzStr(String clazzStr) {
+		this.clazzStr = clazzStr;
 	}
 	
 	/**
@@ -75,7 +97,6 @@ public class MethodParamCacheDTO implements Serializable {
 	public void setCode(String code) {
 		this.code = code;
 	}
-
 	
 	/**
 	 * Gets length.
@@ -112,11 +133,21 @@ public class MethodParamCacheDTO implements Serializable {
 	public void setRequire(boolean require) {
 		this.require = require;
 	}
-
+	
+	/**
+	 * Gets clazz.
+	 *
+	 * @return the clazz
+	 */
 	public Object getClazz() {
 		return clazz;
 	}
-
+	
+	/**
+	 * Sets clazz.
+	 *
+	 * @param clazz the clazz
+	 */
 	public void setClazz(Object clazz) {
 		this.clazz = clazz;
 	}

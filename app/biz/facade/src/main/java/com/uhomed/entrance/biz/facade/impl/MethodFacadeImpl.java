@@ -293,19 +293,22 @@ public class MethodFacadeImpl implements MethodFacade {
 		}
 		for (MethodParam param : params) {
 			Object o = null;
-			if(Float.class.getName().equalsIgnoreCase(ParamClazzContext.getClazz( param.getParamType() ))){
+			String clazzStr = ParamClazzContext.getClazz( param.getParamType() );
+			if(Float.class.getName().equalsIgnoreCase(clazzStr)){
 				o = new Float(0);
-			}else if(Double.class.getName().equalsIgnoreCase(ParamClazzContext.getClazz( param.getParamType() ))){
+			}else if(Double.class.getName().equalsIgnoreCase(clazzStr)){
 				o = new Double(0);
-			}else if(Integer.class.getName().equalsIgnoreCase(ParamClazzContext.getClazz( param.getParamType() ))){
+			}else if(Integer.class.getName().equalsIgnoreCase(clazzStr)){
 				o = new Integer(0);
-			}else if(Long.class.getName().equalsIgnoreCase(ParamClazzContext.getClazz( param.getParamType() ))){
+			}else if(Long.class.getName().equalsIgnoreCase(clazzStr)){
 				o = new Long(0);
-			} else if(Boolean.class.getName().equalsIgnoreCase(ParamClazzContext.getClazz( param.getParamType() ))){
+			} else if(Boolean.class.getName().equalsIgnoreCase(clazzStr)){
 				o = new Boolean(false);
+			}else if(List.class.getName().equalsIgnoreCase(clazzStr)){
+				o = new ArrayList<>();
 			}else {
 				try {
-					o = Class.forName(ParamClazzContext.getClazz( param.getParamType() )).newInstance();
+					o = Class.forName(clazzStr).newInstance();
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
 				} catch (IllegalAccessException e) {
@@ -315,7 +318,7 @@ public class MethodFacadeImpl implements MethodFacade {
 				}
 			}
 			result.add( new MethodParamCacheDTO( param.getParamCode(), o, param.getLength(),
-					StringUtils.equals( param.getParamRequire(), "Y" ),param.getDefaultValue() ) );
+					StringUtils.equals( param.getParamRequire(), "Y" ),param.getDefaultValue() ,clazzStr) );
 		}
 		return result;
 	}

@@ -49,7 +49,7 @@ public class RequestDubbo implements Request {
 				throw new ParamException( "bizParams解析错误！" );
 			}
 			for (MethodParamCacheDTO p : paramList) {
-				paramsType.add( p.getClazz().getClass().getName() );
+				paramsType.add( p.getClazzStr() );
 				// 是否是自定义对象
 				try {
 					if (p.getClazz() instanceof Number || p.getClazz() instanceof Date || p.getClazz() instanceof String || p.getClazz() instanceof Collection || p.getClazz() instanceof Boolean) {
