@@ -47,7 +47,7 @@
 	</select>
 
     <insert id="add" parameterType="com.uhomed.entrance.model.MethodParam" useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO `METHOD_PARAM` (`ID`,`METHOD_ID`,`PARAM_CODE`,`PARAM_NAME`,`PARAM_TYPE`,`PARAM_INDEX`,`PARAM_REQUIRE`,`LENGTH`,`DEFAULT_VALUE`,`PARAM_DESC`) VALUES (#{id},#{methodId},#{paramCode},#{paramName},#{paramType},#{paramIndex},#{paramRequire},#{length},#{defaultValue},#{paramDesc})
+		INSERT INTO `METHOD_PARAM` (`METHOD_ID`,`PARAM_CODE`,`PARAM_NAME`,`PARAM_TYPE`,`PARAM_INDEX`,`PARAM_REQUIRE`,`LENGTH`,`DEFAULT_VALUE`,`PARAM_DESC`) VALUES (#{methodId},#{paramCode},#{paramName},#{paramType},#{paramIndex},#{paramRequire},#{length},#{defaultValue},#{paramDesc})
 	</insert>
 
     <delete id="delete" parameterType="com.uhomed.entrance.model.MethodParam">
