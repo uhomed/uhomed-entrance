@@ -32,7 +32,7 @@
 				AND a.API_METHOD_VERSION = #{apiMethodVersion}
 			</if>
 			<if test="search != null" >
-				AND ((a.API_METHOD_CODE LIKE CONCAT('%',#{search},'%') OR EXISTS(select b.METHOD_ID FROM METHOD_DUBBO b WHERE b.METHOD_ID = a.ID AND (b.CLASS_PATH LIKE CONCAT('%',#{search},'%') OR b.METHOD_NAME LIKE CONCAT('%',#{search},'%')))))
+				AND (a.API_METHOD_CODE LIKE CONCAT('%',#{search},'%') OR EXISTS(select * from METHOD_DUBBO b where b.METHOD_ID = a.ID AND (b.CLASS_PATH LIKE CONCAT('%',#{search},'%') OR b.METHOD_NAME LIKE CONCAT('%',#{search},'%'))))
 			</if>
 			<if test="likeApiMethodName != null">
 				AND a.API_METHOD_NAME LIKE CONCAT('%',#{likeApiMethodName},'%')
