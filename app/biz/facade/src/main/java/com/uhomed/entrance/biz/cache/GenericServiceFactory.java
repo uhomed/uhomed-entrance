@@ -81,7 +81,7 @@ public class GenericServiceFactory {
                 reference.setRegistry(registryConfig);
                 reference.setConsumer(consumerConfig);
                 //reference.setProtocol("dubbo");
-                reference.setVersion(dubboVersion);
+//                reference.setVersion(dubboVersion);
 
                 REFERENCE_CONFIG_CACHE.put(key, reference);
             }
