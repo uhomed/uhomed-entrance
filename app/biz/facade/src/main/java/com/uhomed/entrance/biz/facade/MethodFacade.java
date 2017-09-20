@@ -56,14 +56,14 @@ public interface MethodFacade {
 			String mode, String methodDesc, String type, String classPath, String methodName,List<MethodParam> paramList);
 	
 	/**
-	 * @param likeApiMethodCode
+	 * @param search
 	 * @param likeApiMethodName
 	 * @param status
 	 * @param currPage
 	 * @param pageSize
 	 * @return
 	 */
-	PageModel<MethodInfoView> methodList(String groupCode, String likeApiMethodCode, String likeApiMethodName, String status, Integer currPage,
+	PageModel<MethodInfoView> methodList(String groupCode, String search, String likeApiMethodName, String status, Integer currPage,
 			Integer pageSize);
 	
 	/**

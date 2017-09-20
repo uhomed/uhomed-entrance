@@ -153,7 +153,7 @@ public class MethodFacadeImpl implements MethodFacade {
 	}
 	
 	@Override
-	public PageModel<MethodInfoView> methodList(String groupCode, String likeApiMethodCode, String likeApiMethodName, String status, Integer currPage,
+	public PageModel<MethodInfoView> methodList(String groupCode, String search, String likeApiMethodName, String status, Integer currPage,
 			Integer pageSize) {
 		
 		PageModel<MethodInfoView> page = new PageModel<>();
@@ -161,7 +161,7 @@ public class MethodFacadeImpl implements MethodFacade {
 		Map<String, Object> params = new HashMap<>();
 		
 		params.put( "groupCode", groupCode );
-		params.put( "likeApiMethodCode", likeApiMethodCode );
+		params.put( "search", search );
 		params.put( "likeApiMethodName", likeApiMethodName );
 		params.put( "status", status );
 		
