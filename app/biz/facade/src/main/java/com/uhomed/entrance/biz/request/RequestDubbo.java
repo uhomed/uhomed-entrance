@@ -2,10 +2,11 @@ package com.uhomed.entrance.biz.request;
 
 import java.util.*;
 
-import com.uhomed.entrance.ResultModel;
-import com.xiaoleilu.hutool.util.StrUtil;
+import com.alibaba.fastjson.JSONException;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.dubbo.rpc.RpcContext;
 import com.alibaba.dubbo.rpc.RpcException;
@@ -13,14 +14,13 @@ import com.alibaba.dubbo.rpc.service.GenericService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
-import com.google.common.base.Joiner;
 import com.uhomed.entrance.biz.cache.GenericServiceFactory;
 import com.uhomed.entrance.biz.cache.dto.MethodCacheDTO;
 import com.uhomed.entrance.biz.cache.dto.MethodDubboDTO;
 import com.uhomed.entrance.biz.cache.dto.MethodParamCacheDTO;
 import com.uhomed.entrance.biz.exception.ParamException;
 import com.uhomed.entrance.core.utils.logger.LoggerUtils;
-import org.springframework.stereotype.Component;
+import com.xiaoleilu.hutool.util.StrUtil;
 
 /**
  * @author
@@ -33,7 +33,7 @@ public class RequestDubbo implements Request {
 	
 	public Object request(String sso, String bizParams, MethodCacheDTO methodDTO) throws ParamException {
 
-        ResultModel<String> result = new ResultModel<>();
+		ModelAndView result = new ModelAndView();
 		long allTime = System.currentTimeMillis();
 		List<Object> paramsValue = new ArrayList<>();
 		List<String> paramsType = new ArrayList<>();
@@ -52,9 +52,10 @@ public class RequestDubbo implements Request {
 				paramsType.add( p.getClazzStr() );
 				// 是否是自定义对象
 				try {
-					if (p.getClazz() instanceof Number || p.getClazz() instanceof Date || p.getClazz() instanceof String || p.getClazz() instanceof Collection || p.getClazz() instanceof Boolean) {
-						Object value = json.getObject( p.getCode(), p.getClazz().getClass() );
 
+					if (p.getClazz() instanceof Number || p.getClazz() instanceof Date || p.getClazz() instanceof String || p.getClazz() instanceof Collection || p.getClazz() instanceof Boolean) {
+//						Object value = json.getObject( p.getCode(), p.getClazz().getClass() );
+						Object value = json.get(p.getCode());
 						if(StrUtil.isNotEmpty(p.getDefaultValue()) && value == null){
 							value = p.getDefaultValue();
 						}
@@ -77,6 +78,11 @@ public class RequestDubbo implements Request {
 					if (p.isRequire()) {
 						throw new ParamException( p.getCode() + "不能为空！" );
 					}
+//				} catch (JSONException e){
+//					if(e.getMessage().equalsIgnoreCase("can not cast to : java.util.ArrayList")){
+//						//数据格式
+//						paramsValue.add(json.get(p.getCode()));
+//					}
 				}
 			}
 		}
@@ -96,14 +102,15 @@ public class RequestDubbo implements Request {
 				return o;
 			}
 		} catch (RpcException e) {
+			result.addObject("status",false);
 			if(e.getMessage().contains("Please check if the providers have been started and registered")){
-                result.setMessage("未在注册中心发现该接口");
+                result.addObject("message","未在注册中心发现该接口");
             }else if(e.getMessage().contains("Failed to invoke remote method")){
-                result.setMessage("发现服务提供者，未发现该方法");
+				result.addObject("message","发现服务提供者，未发现该方法");
             }else {
-                result.setMessage("网络异常，请稍候再试！" );
+				result.addObject("message","网络异常，请稍候再试！" );
             }
-            result.setCode("100001");
+			result.addObject("code","100001");
 			LoggerUtils.defaultPrint( e, "rpc request method [" + methodDTO.getApiMethodCode() + "]" );
 		} catch (Exception e) {
 			LoggerUtils.defaultPrint( e, "rpc request method [" + methodDTO.getApiMethodCode() + "]" );
