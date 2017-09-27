@@ -2,7 +2,9 @@ package com.uhomed.entrance.biz.request;
 
 import java.util.*;
 
-import com.alibaba.fastjson.JSONException;
+import com.alibaba.fastjson.*;
+import com.alibaba.fastjson.util.TypeUtils;
+import com.uhomed.entrance.biz.cache.MethodCache;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
@@ -11,9 +13,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.dubbo.rpc.RpcContext;
 import com.alibaba.dubbo.rpc.RpcException;
 import com.alibaba.dubbo.rpc.service.GenericService;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
 import com.uhomed.entrance.biz.cache.GenericServiceFactory;
 import com.uhomed.entrance.biz.cache.dto.MethodCacheDTO;
 import com.uhomed.entrance.biz.cache.dto.MethodDubboDTO;
@@ -52,10 +51,13 @@ public class RequestDubbo implements Request {
 				paramsType.add( p.getClazzStr() );
 				// 是否是自定义对象
 				try {
+					Object value = json.get(p.getCode());
+					if(value != null && value instanceof JSONArray){
+						paramsValue.add( value );
+					}else if (p.getClazz() instanceof Number || p.getClazz() instanceof Date || p.getClazz() instanceof String  || p.getClazz() instanceof Boolean || p.getClazz() instanceof Collection) {
+//						value = json.getObject( p.getCode(), p.getClazz().getClass() );
+						value = TypeUtils.castToJavaBean(value, p.getClazz().getClass());
 
-					if (p.getClazz() instanceof Number || p.getClazz() instanceof Date || p.getClazz() instanceof String || p.getClazz() instanceof Collection || p.getClazz() instanceof Boolean) {
-//						Object value = json.getObject( p.getCode(), p.getClazz().getClass() );
-						Object value = json.get(p.getCode());
 						if(StrUtil.isNotEmpty(p.getDefaultValue()) && value == null){
 							value = p.getDefaultValue();
 						}
@@ -161,4 +163,6 @@ public class RequestDubbo implements Request {
 		}
 		
 	}
+
+
 }
