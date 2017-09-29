@@ -32,7 +32,7 @@ public class MethodCacheDTO implements Serializable {
 	/** 参数集合 */
 	private List<MethodParamCacheDTO>	params;
 	/** dubbo方法信息 */
-	private MethodDTO methodInfo;
+	private MethodDTO					methodInfo;
 	
 	/**
 	 * Instantiates a new MethodDTO cache dto.
@@ -45,9 +45,9 @@ public class MethodCacheDTO implements Serializable {
 	 * @param mode the mode
 	 * @param params the params
 	 */
-	public MethodCacheDTO(Integer id,String apiMethodCode, String apiMethodVersion, boolean status, boolean verifiSso, MethodTypeContext type, String mode,
-			List<MethodParamCacheDTO> params,MethodDTO methodInfo) {
-		this.id = id ;
+	public MethodCacheDTO(Integer id, String apiMethodCode, String apiMethodVersion, boolean status, boolean verifiSso, MethodTypeContext type,
+			String mode, List<MethodParamCacheDTO> params, MethodDTO methodInfo) {
+		this.id = id;
 		this.apiMethodCode = apiMethodCode;
 		this.apiMethodVersion = apiMethodVersion;
 		this.status = status;
@@ -57,8 +57,6 @@ public class MethodCacheDTO implements Serializable {
 		this.params = params;
 		this.methodInfo = methodInfo;
 	}
-
-
 	
 	/**
 	 * Gets method info.

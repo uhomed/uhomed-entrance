@@ -19,5 +19,5 @@ public interface Request {
      * @throws ParamException
      * @throws RpcException
      */
-    Object request(String sso,String bizParams, MethodCacheDTO methodDTO) throws ParamException,RpcException;
+    Object request(String sso,String bizParams, MethodCacheDTO methodDTO,String router) throws ParamException,RpcException;
 }

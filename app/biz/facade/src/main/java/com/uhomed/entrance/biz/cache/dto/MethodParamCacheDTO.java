@@ -24,6 +24,8 @@ public class MethodParamCacheDTO implements Serializable {
 	private String				defaultValue;
 	/** 包名类名 */
 	private String				clazzStr;
+	/** 参数名称 */
+	private String				name;
 	
 	/**
 	 * Instantiates a new MethodDTO param cache dto.
@@ -34,14 +36,34 @@ public class MethodParamCacheDTO implements Serializable {
 	 * @param require the require
 	 * @param defaultValue the default value
 	 * @param clazzStr the clazz str
+	 * @param name the name
 	 */
-	public MethodParamCacheDTO(String code, Object clazz, Integer length, boolean require, String defaultValue, String clazzStr) {
+	public MethodParamCacheDTO(String code, Object clazz, Integer length, boolean require, String defaultValue, String clazzStr, String name) {
 		this.code = code;
 		this.clazz = clazz;
 		this.length = length;
 		this.require = require;
 		this.defaultValue = defaultValue;
 		this.clazzStr = clazzStr;
+		this.name = name;
+	}
+	
+	/**
+	 * Gets name.
+	 *
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+	
+	/**
+	 * Sets name.
+	 *
+	 * @param name the name
+	 */
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	/**

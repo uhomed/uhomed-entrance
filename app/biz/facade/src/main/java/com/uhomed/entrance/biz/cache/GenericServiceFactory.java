@@ -82,6 +82,7 @@ public class GenericServiceFactory {
                 reference.setConsumer(consumerConfig);
                 //reference.setProtocol("dubbo");
 //                reference.setVersion(dubboVersion);
+//                reference.setLoadbalance("uhomed-loadbalance");
 
                 REFERENCE_CONFIG_CACHE.put(key, reference);
             }

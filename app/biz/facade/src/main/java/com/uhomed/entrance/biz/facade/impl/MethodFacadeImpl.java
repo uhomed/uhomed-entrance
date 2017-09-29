@@ -318,7 +318,7 @@ public class MethodFacadeImpl implements MethodFacade {
 				}
 			}
 			result.add( new MethodParamCacheDTO( param.getParamCode(), o, param.getLength(),
-					StringUtils.equals( param.getParamRequire(), "Y" ),param.getDefaultValue() ,clazzStr) );
+					StringUtils.equals( param.getParamRequire(), "Y" ),param.getDefaultValue() ,clazzStr,param.getParamName()) );
 		}
 		return result;
 	}

@@ -50,7 +50,8 @@ public class GatewayController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/gateway", method = { RequestMethod.POST, RequestMethod.GET })
-	public Object gateway(String method, String bizParams, String version, String format, String sso, String timestamp) {
+	public Object gateway(String method, String bizParams, String version, String format, String sso, String timestamp, String client,
+			String clientVersion, String router) {
 		ModelAndView result = new ModelAndView();
 		
 		if (StringUtils.isEmpty( method )) {
@@ -61,16 +62,15 @@ public class GatewayController extends BaseController {
 			super.setFailMessage( result, "接口版本号不能为空！" );
 			return result;
 		}
-
-
-		MethodCacheDTO methodDTO = this.methodCache.getMethod(method, version);
+		
+		MethodCacheDTO methodDTO = this.methodCache.getMethod( method, version );
 		if (methodDTO == null) {
 			super.setFailMessage( result, "该方法不存在或未开放！" );
 			return result;
 		}
-
-		if(!super.request.getMethod().equalsIgnoreCase(methodDTO.getMode())){
-			super.setFailMessage(result,"方法不存在！");
+		
+		if (!super.request.getMethod().equalsIgnoreCase( methodDTO.getMode() )) {
+			super.setFailMessage( result, "方法不存在！" );
 			return result;
 		}
 		
@@ -91,13 +91,14 @@ public class GatewayController extends BaseController {
 		}
 		
 		try {
-			Object o = request.request( sso, bizParams, methodDTO );
+			Object o = request.request( sso, bizParams, methodDTO,router );
 			if (o != null) {
 				return o;
 			}
 		} catch (ParamException e) {
 			super.setFailMessage( result, e.getMessage() );
 		} catch (Exception e) {
+			e.printStackTrace();
 			super.setFailMessage( result, "网络异常，请稍候再试！", "100001" );
 		}
 		return result;
