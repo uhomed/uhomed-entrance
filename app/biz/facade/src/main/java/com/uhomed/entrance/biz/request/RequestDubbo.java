@@ -76,7 +76,7 @@ public class RequestDubbo implements Request {
 							throw new ParamException( p.getName() + "不能为空！" );
 						}
 						if (value instanceof String) {
-							if (p.getLength() != null && p.getLength() < String.valueOf( value ).length()) {
+							if (p.getLength() != 0 && p.getLength() < String.valueOf( value ).length()) {
 								throw new ParamException( p.getName() + "长度大于" + p.getLength() + "！" );
 							}
 						}
