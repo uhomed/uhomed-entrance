@@ -13,6 +13,7 @@
         <result property="length" column="LENGTH"/>
         <result property="defaultValue" column="DEFAULT_VALUE"/>
         <result property="paramDesc" column="PARAM_DESC"/>
+        <result property="minLength" column="MIN_LENGTH"/>
     </resultMap>
 
     <sql id="MethodParam_common_condition">
@@ -47,11 +48,11 @@
 	</select>
 
     <insert id="add" parameterType="com.uhomed.entrance.model.MethodParam" useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO `METHOD_PARAM` (`METHOD_ID`,`PARAM_CODE`,`PARAM_NAME`,`PARAM_TYPE`,`PARAM_INDEX`,`PARAM_REQUIRE`,`LENGTH`,`DEFAULT_VALUE`,`PARAM_DESC`) VALUES (#{methodId},#{paramCode},#{paramName},#{paramType},#{paramIndex},#{paramRequire},#{length},#{defaultValue},#{paramDesc})
+		INSERT INTO `METHOD_PARAM` (`METHOD_ID`,`PARAM_CODE`,`PARAM_NAME`,`PARAM_TYPE`,`PARAM_INDEX`,`PARAM_REQUIRE`,`LENGTH`,`DEFAULT_VALUE`,`PARAM_DESC`,`MIN_LENGTH`) VALUES (#{methodId},#{paramCode},#{paramName},#{paramType},#{paramIndex},#{paramRequire},#{length},#{defaultValue},#{paramDesc},#{minLength})
 	</insert>
 
     <delete id="delete" parameterType="com.uhomed.entrance.model.MethodParam">
-		DELETE FROM `METHOD_PARAM`
+        DELETE FROM `METHOD_PARAM`
         <trim prefix="WHERE" prefixOverrides="AND">
             <if test="id != null">
                 AND ID = #{id}
@@ -60,7 +61,7 @@
                 AND METHOD_ID = #{methodId}
             </if>
         </trim>
-	</delete>
+    </delete>
 
     <update id="update" parameterType="com.uhomed.entrance.model.MethodParam">
         UPDATE `METHOD_PARAM`
@@ -91,6 +92,9 @@
             </if>
             <if test="paramDesc != null">
                 `PARAM_DESC` = #{paramDesc},
+            </if>
+            <if test="minLength != null">
+                `MIN_LENGTH` = #{minLength},
             </if>
         </trim>
         WHERE ID = #{id}

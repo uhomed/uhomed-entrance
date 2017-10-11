@@ -39,66 +39,14 @@ public class RequestDubbo implements Request {
 	
 	public Object request(String sso, String bizParams, MethodCacheDTO methodDTO, String router) throws ParamException {
 		
-//		router = "10.0.0.169";
-		
+		// router = "10.0.0.169";
 		ModelAndView result = new ModelAndView();
 		long allTime = System.currentTimeMillis();
-		List<Object> paramsValue = new ArrayList<>();
-		List<String> paramsType = new ArrayList<>();
 		// 使用隐式传参方式 将sso token传入服务
 		RpcContext.getContext().setAttachment( "sso", sso );
-		if (CollectionUtils.isNotEmpty( methodDTO.getParams() )) {
-			
-			List<MethodParamCacheDTO> paramList = methodDTO.getParams();
-			JSONObject json = null;
-			try {
-				json = JSONObject.parseObject( bizParams );
-			} catch (Exception e) {
-				throw new ParamException( "bizParams解析错误！" );
-			}
-			for (MethodParamCacheDTO p : paramList) {
-				paramsType.add( p.getClazzStr() );
-				// 是否是自定义对象
-				try {
-					Object value = json.get( p.getCode() );
-					if (value != null && value instanceof JSONArray) {
-						paramsValue.add( value );
-					} else if (p.getClazz() instanceof Number || p.getClazz() instanceof Date || p.getClazz() instanceof String
-							|| p.getClazz() instanceof Boolean || p.getClazz() instanceof Collection) {
-						// value = json.getObject( p.getCode(), p.getClazz().getClass() );
-						value = TypeUtils.castToJavaBean( value, p.getClazz().getClass() );
-						
-						if (StrUtil.isNotEmpty( p.getDefaultValue() ) && value == null) {
-							value = p.getDefaultValue();
-						}
-						
-						if (p.isRequire() && value == null) {
-							throw new ParamException( p.getName() + "不能为空！" );
-						}
-						if (value instanceof String) {
-							if (p.getLength() != null && p.getLength() < String.valueOf( value ).length()) {
-								throw new ParamException( p.getName() + "长度大于" + p.getLength() + "！" );
-							}
-						}
-						paramsValue.add( value );
-					} else {
-						Map<String, Object> domain = JSON.parseObject( json.getString( p.getCode() ), new TypeReference<Map<String, Object>>() {
-						} );
-						paramsValue.add( domain );
-					}
-				} catch (NullPointerException e) {
-					if (p.isRequire()) {
-						throw new ParamException( p.getCode() + "不能为空！" );
-					}
-					// } catch (JSONException e){
-					// if(e.getMessage().equalsIgnoreCase("can not cast to : java.util.ArrayList")){
-					// //数据格式
-					// paramsValue.add(json.get(p.getCode()));
-					// }
-				}
-			}
-		}
-		
+
+		Map<String,Object> params = RequestUtil.convertParams(bizParams,methodDTO);
+
 		Registry registry = null;
 		URL url = null;
 		
@@ -113,23 +61,21 @@ public class RequestDubbo implements Request {
 							+ router + "&runtime=true" );
 			registry.register( url );
 			try {
-				Thread.sleep(100l);
+				Thread.sleep( 100l );
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
 		try {
 			
-
-			
 			long rpcTime = System.currentTimeMillis();
-			// String genericKey = Joiner.on( '_' ).join( methodDTO.getApiMethodCode(),
-			// methodDTO.getApiMethodVersion() );
 			GenericService genericService = GenericServiceFactory.getInstance( methodDTO.getId().toString() );
-			String[] strings = new String[paramsType.size()];
-			paramsType.toArray( strings );
+			List<String> types = (List<String>) params.get("types");
+			List<Object> values = (List<Object>) params.get("values");
+			String[] strings = new String[types.size()];
+			types.toArray( strings );
 			
-			Object o = genericService.$invoke( dubbo.getMethodName(), strings, paramsValue.toArray() );
+			Object o = genericService.$invoke( dubbo.getMethodName(), strings, values.toArray() );
 			DEFAULT_LOGGER
 					.info( "rpc request method [" + methodDTO.getApiMethodCode() + "] time [" + (System.currentTimeMillis() - rpcTime) + "ms]" );
 			if (o != null) {
@@ -198,6 +144,16 @@ public class RequestDubbo implements Request {
 			return object;
 		}
 		
+	}
+
+
+	public static void main(String[] args) {
+		Map<String,Object> params = new HashMap<>();
+		params.put("java.lang.String","123123");
+		params.put("java.lang.String","321321");
+
+		System.out.println(params.keySet().toArray());
+		System.out.println(params.entrySet().toArray());
 	}
 	
 }

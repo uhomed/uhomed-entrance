@@ -27,6 +27,8 @@ public class MethodParamCacheDTO implements Serializable {
 	/** 参数名称 */
 	private String				name;
 	
+	private Integer				minLength;
+	
 	/**
 	 * Instantiates a new MethodDTO param cache dto.
 	 *
@@ -37,8 +39,10 @@ public class MethodParamCacheDTO implements Serializable {
 	 * @param defaultValue the default value
 	 * @param clazzStr the clazz str
 	 * @param name the name
+	 * @param minLength the min length
 	 */
-	public MethodParamCacheDTO(String code, Object clazz, Integer length, boolean require, String defaultValue, String clazzStr, String name) {
+	public MethodParamCacheDTO(String code, Object clazz, Integer length, boolean require, String defaultValue, String clazzStr, String name,
+			Integer minLength) {
 		this.code = code;
 		this.clazz = clazz;
 		this.length = length;
@@ -46,6 +50,25 @@ public class MethodParamCacheDTO implements Serializable {
 		this.defaultValue = defaultValue;
 		this.clazzStr = clazzStr;
 		this.name = name;
+		this.minLength = minLength;
+	}
+	
+	/**
+	 * Gets min length.
+	 *
+	 * @return the min length
+	 */
+	public Integer getMinLength() {
+		return minLength;
+	}
+	
+	/**
+	 * Sets min length.
+	 *
+	 * @param minLength the min length
+	 */
+	public void setMinLength(Integer minLength) {
+		this.minLength = minLength;
 	}
 	
 	/**

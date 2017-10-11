@@ -31,6 +31,26 @@ public class MethodParam implements Serializable {
 	private String				defaultValue;
 	/** 参数描述 */
 	private String				paramDesc;
+	/** 最小长度 */
+	private Integer				minLength;
+	
+	/**
+	 * Gets min length.
+	 *
+	 * @return the min length
+	 */
+	public Integer getMinLength() {
+		return minLength;
+	}
+	
+	/**
+	 * Sets min length.
+	 *
+	 * @param minLength the min length
+	 */
+	public void setMinLength(Integer minLength) {
+		this.minLength = minLength;
+	}
 	
 	/**
 	 * Gets param desc.

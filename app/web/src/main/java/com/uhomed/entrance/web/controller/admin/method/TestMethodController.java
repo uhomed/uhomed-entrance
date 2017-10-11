@@ -1,12 +1,10 @@
 package com.uhomed.entrance.web.controller.admin.method;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
 
-import com.alibaba.fastjson.JSON;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,9 +15,8 @@ import com.alibaba.dubbo.rpc.RpcContext;
 import com.alibaba.dubbo.rpc.RpcException;
 import com.alibaba.dubbo.rpc.service.GenericException;
 import com.alibaba.dubbo.rpc.service.GenericService;
-import com.google.common.base.Joiner;
 import com.uhomed.entrance.biz.cache.GenericServiceFactory;
-import com.uhomed.entrance.biz.cache.MethodCache;
+import com.uhomed.entrance.biz.cache.local.MethodCache;
 import com.uhomed.entrance.biz.cache.dto.MethodCacheDTO;
 import com.uhomed.entrance.biz.cache.dto.MethodDubboDTO;
 import com.uhomed.entrance.biz.cache.dto.MethodParamCacheDTO;
