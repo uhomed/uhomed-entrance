@@ -19,6 +19,6 @@
 	
 	<!-- 定时器 -->
     <task:annotation-driven scheduler="qbScheduler" mode="proxy"/>  
-    <task:scheduler id="qbScheduler" pool-size="100"/> 
-    
+    <task:scheduler id="qbScheduler" pool-size="100"/>
+
 </beans>

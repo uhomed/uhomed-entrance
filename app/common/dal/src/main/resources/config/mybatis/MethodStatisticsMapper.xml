@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.uhomed.entrance.model.MethodStatistics">
+
+    <resultMap type="com.uhomed.entrance.model.MethodStatistics" id="MethodStatisticsResultMap">
+        <id property="id" column="ID"/>
+        <result property="methodCode" column="METHOD_CODE"/>
+        <result property="methodVersion" column="METHOD_VERSION"/>
+        <result property="requestParam" column="REQUEST_PARAM"/>
+        <result property="status" column="STATUS"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="holdTime" column="HOLD_TIME"/>
+
+    </resultMap>
+
+    <sql id="MethodStatistics_common_condition">
+        <trim prefix="WHERE" prefixOverrides="AND">
+        </trim>
+    </sql>
+    <sql id="MethodStatistics_common_group">
+        <trim prefix="GROUP BY" prefixOverrides=",">
+        </trim>
+    </sql>
+
+    <select id="query" resultMap="MethodStatisticsResultMap">
+        SELECT * FROM `METHOD_STATISTICS` a
+        <include refid="MethodStatistics_common_condition"/>
+        <include refid="MethodStatistics_common_group"/>
+        ORDER BY a.ID DESC
+    </select>
+
+    <select id="count" resultType="int">
+        SELECT COUNT(1) FROM `METHOD_STATISTICS` a
+        <include refid="MethodStatistics_common_condition"/>
+        <include refid="MethodStatistics_common_group"/>
+    </select>
+
+    <select id="query_id" resultMap="MethodStatisticsResultMap">
+		SELECT * FROM
+		`METHOD_STATISTICS` a WHERE a.ID =
+		#{id}
+	</select>
+
+    <insert id="add" parameterType="com.uhomed.entrance.model.MethodStatistics" useGeneratedKeys="true"
+            keyProperty="id">
+		INSERT INTO `METHOD_STATISTICS` (`ID`,`METHOD_CODE`,`METHOD_VERSION`,`REQUEST_PARAM`,`STATUS`,`CREATE_TIME`,`HOLD_TIME`) VALUES (#{id},#{methodCode},#{methodVersion},#{requestParam},#{status},#{createTime},#{holdTime})
+	</insert>
+
+    <delete id="delete" parameterType="com.uhomed.entrance.model.MethodStatistics">
+		DELETE FROM `METHOD_STATISTICS` WHERE ID =
+		#{id}
+	</delete>
+
+</mapper>

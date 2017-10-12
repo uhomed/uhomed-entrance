@@ -13,8 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.alibaba.dubbo.rpc.RpcException;
-import com.uhomed.entrance.biz.cache.MethodCache;
+import com.uhomed.entrance.biz.cache.local.MethodCache;
 import com.uhomed.entrance.biz.cache.dto.MethodCacheDTO;
 import com.uhomed.entrance.biz.context.MethodTypeContext;
 import com.uhomed.entrance.biz.exception.ParamException;
@@ -91,14 +90,13 @@ public class GatewayController extends BaseController {
 		}
 		
 		try {
-			Object o = request.request( sso, bizParams, methodDTO,router );
+			Object o = request.request( sso, bizParams, methodDTO, router );
 			if (o != null) {
 				return o;
 			}
 		} catch (ParamException e) {
-			super.setFailMessage( result, e.getMessage() );
+			super.setFailMessage( result, e.getMessage(), "300000" );
 		} catch (Exception e) {
-			e.printStackTrace();
 			super.setFailMessage( result, "网络异常，请稍候再试！", "100001" );
 		}
 		return result;

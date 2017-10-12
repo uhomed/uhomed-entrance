@@ -53,7 +53,7 @@ public interface MethodFacade {
 	 * @return
 	 */
 	Result<String> updateMethod(Integer id, String apiMethodCode, String apiMethodName, String apiMethodVersion, String status, String verifiSso,
-			String mode, String methodDesc, String type, String classPath, String methodName,List<MethodParam> paramList);
+			String mode, String methodDesc, String type, String classPath, String methodName, List<MethodParam> paramList);
 	
 	/**
 	 * @param search
@@ -81,7 +81,7 @@ public interface MethodFacade {
 	 * @return
 	 */
 	Result<Integer> createMethodDubbo(String groupCode, String apiMethodCode, String apiMethodName, String apiMethodVersion, String status,
-			String verifiSso, String mode, String methodDesc, String classPath, String methodName,List<MethodParam> paramList);
+			String verifiSso, String mode, String methodDesc, String classPath, String methodName, List<MethodParam> paramList);
 	
 	/**
 	 * 更新dubbo接口
@@ -131,17 +131,17 @@ public interface MethodFacade {
 	void initCache();
 	
 	MethodDubbo queryMethodDubboById(Integer id);
-
-
+	
 	/**
 	 *
 	 * @param params
 	 * @return
 	 */
 	Result<Integer> updateParams(List<MethodParam> params);
-
+	
 	/**
 	 * 获取所有参数
+	 * 
 	 * @param methodId
 	 * @return
 	 */

@@ -11,7 +11,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.druid.util.StringUtils;
-import com.uhomed.entrance.biz.cache.MethodCache;
+import com.uhomed.entrance.biz.cache.local.MethodCache;
 import com.uhomed.entrance.biz.cache.dto.MethodDTO;
 import com.uhomed.entrance.biz.cache.dto.MethodDubboDTO;
 import com.uhomed.entrance.biz.cache.dto.MethodParamCacheDTO;
@@ -318,7 +318,7 @@ public class MethodFacadeImpl implements MethodFacade {
 				}
 			}
 			result.add( new MethodParamCacheDTO( param.getParamCode(), o, param.getLength(),
-					StringUtils.equals( param.getParamRequire(), "Y" ),param.getDefaultValue() ,clazzStr,param.getParamName()) );
+					StringUtils.equals( param.getParamRequire(), "Y" ),param.getDefaultValue() ,clazzStr,param.getParamName(),param.getMinLength()) );
 		}
 		return result;
 	}
