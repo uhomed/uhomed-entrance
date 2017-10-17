@@ -111,7 +111,7 @@ public class MethodFacadeImpl implements MethodFacade {
 		methodInfo.setMode( mode );
 		methodInfo.setType( type );
 		methodInfo.setId( id );
-
+		
 		int count = (int) this.methodInfoService.update( methodInfo );
 		if (count > 0) {
 			result.setSuccess( true );
@@ -279,6 +279,10 @@ public class MethodFacadeImpl implements MethodFacade {
 		result.setSuccess( true );
 		return result;
 	}
+
+	public enum SimpleEnum{
+		SIMPLE_ENUM;
+	}
 	
 	/**
 	 * param参数转换
@@ -294,21 +298,24 @@ public class MethodFacadeImpl implements MethodFacade {
 		for (MethodParam param : params) {
 			Object o = null;
 			String clazzStr = ParamClazzContext.getClazz( param.getParamType() );
-			if(Float.class.getName().equalsIgnoreCase(clazzStr)){
-				o = new Float(0);
-			}else if(Double.class.getName().equalsIgnoreCase(clazzStr)){
-				o = new Double(0);
-			}else if(Integer.class.getName().equalsIgnoreCase(clazzStr)){
-				o = new Integer(0);
-			}else if(Long.class.getName().equalsIgnoreCase(clazzStr)){
-				o = new Long(0);
-			} else if(Boolean.class.getName().equalsIgnoreCase(clazzStr)){
-				o = new Boolean(false);
-			}else if(List.class.getName().equalsIgnoreCase(clazzStr)){
+			if (Float.class.getName().equalsIgnoreCase( clazzStr )) {
+				o = new Float( 0 );
+			} else if (Double.class.getName().equalsIgnoreCase( clazzStr )) {
+				o = new Double( 0 );
+			} else if (Integer.class.getName().equalsIgnoreCase( clazzStr )) {
+				o = new Integer( 0 );
+			} else if (Long.class.getName().equalsIgnoreCase( clazzStr )) {
+				o = new Long( 0 );
+			} else if (Boolean.class.getName().equalsIgnoreCase( clazzStr )) {
+				o = new Boolean( false );
+			} else if (List.class.getName().equalsIgnoreCase( clazzStr )) {
 				o = new ArrayList<>();
-			}else {
+			} else if (Enum.class.getName().equalsIgnoreCase( clazzStr )) {
+				//如果选择的是枚举类型
+				o = SimpleEnum.SIMPLE_ENUM;
+			} else {
 				try {
-					o = Class.forName(clazzStr).newInstance();
+					o = Class.forName( clazzStr ).newInstance();
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
 				} catch (IllegalAccessException e) {
@@ -317,8 +324,8 @@ public class MethodFacadeImpl implements MethodFacade {
 					e.printStackTrace();
 				}
 			}
-			result.add( new MethodParamCacheDTO( param.getParamCode(), o, param.getLength(),
-					StringUtils.equals( param.getParamRequire(), "Y" ),param.getDefaultValue() ,clazzStr,param.getParamName(),param.getMinLength()) );
+			result.add( new MethodParamCacheDTO( param.getParamCode(), o, param.getLength(), StringUtils.equals( param.getParamRequire(), "Y" ),
+					param.getDefaultValue(), clazzStr, param.getParamName(), param.getMinLength() ) );
 		}
 		return result;
 	}

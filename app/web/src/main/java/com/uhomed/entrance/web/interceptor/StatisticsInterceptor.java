@@ -31,7 +31,6 @@ public class StatisticsInterceptor implements MethodInterceptor {
 	
 	@Override
 	public Object invoke(MethodInvocation invocation) throws Throwable {
-		
 		// 获取request
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 		String method = request.getParameter( "method" );

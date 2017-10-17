@@ -23,6 +23,7 @@ public class ParamClazzContext {
         clazzMap.put("Date","java.util.Date");
         clazzMap.put("List","java.util.List");
         clazzMap.put("Object","java.lang.Object");
+        clazzMap.put("Enum","java.lang.Enum");
     }
 
     public static String getClazz(String type){

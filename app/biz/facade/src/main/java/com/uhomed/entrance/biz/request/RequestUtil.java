@@ -42,9 +42,11 @@ public class RequestUtil {
                     if (value != null && value instanceof JSONArray) {
                         values.add(value);
                     } else if (p.getClazz() instanceof Number || p.getClazz() instanceof Date || p.getClazz() instanceof String
-                            || p.getClazz() instanceof Boolean || p.getClazz() instanceof Collection) {
-                        // value = json.getObject( p.getCode(), p.getClazz().getClass() );
-                        value = TypeUtils.castToJavaBean( value, p.getClazz().getClass() );
+                            || p.getClazz() instanceof Boolean || p.getClazz() instanceof Collection || p.getClass().isEnum()) {
+                        //如果是枚举的话，则不强转
+                        if(!p.getClass().isEnum()){
+                            value = TypeUtils.castToJavaBean( value, p.getClazz().getClass() );
+                        }
 
                         if (StrUtil.isNotEmpty( p.getDefaultValue() ) && value == null) {
                             value = p.getDefaultValue();

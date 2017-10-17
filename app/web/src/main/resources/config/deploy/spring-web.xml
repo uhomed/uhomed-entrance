@@ -14,7 +14,7 @@
     <aop:config>
         <!--切入点 -->
         <aop:pointcut id="statisticsPoint"
-                      expression="execution(* com.uhomed.entrance.web.controller.portal.*.*(..))"/>
+                      expression="execution(* com.uhomed.entrance.web.controller.portal.GatewayController.*(..))"/>
         <!--在此切入点使用自定义拦截器 -->
         <aop:advisor pointcut-ref="statisticsPoint"
                      advice-ref="statisticsInterceptor"/>

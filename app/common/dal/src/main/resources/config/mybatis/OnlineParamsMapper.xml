@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.uhomed.entrance.model.OnlineParams">
+
+	<resultMap type="com.uhomed.entrance.model.OnlineParams" id="OnlineParamsResultMap">
+		<result property="paramCode" column="PARAM_CODE" />
+		<result property="paramValue" column="PARAM_VALUE" />
+		<result property="remark" column="REMARK" />
+		<result property="groupCode" column="GROUP_CODE" />
+	</resultMap>
+
+	<sql id="OnlineParams_common_condition">
+		<trim prefix="WHERE" prefixOverrides="AND">
+
+			<if test="paramCode != null">
+				AND a.PARAM_CODE = #{paramCode}
+			</if>
+			<if test="groupCode != null" >
+				AND a.GROUP_CODE = #{groupCode}
+			</if>
+			<if test="searchKey != null">
+				AND a.PARAM_CODE LIKE CONCAT('%',#{searchKey},'%')
+			</if>
+
+			<if test="paramsCodeList != null">
+				AND
+				<foreach collection="paramsCodeList" index="index" item="code"
+						 open="(" separator="OR" close=")">
+					a.PARAM_CODE = #{code}
+				</foreach>
+			</if>
+
+		</trim>
+	</sql>
+	<sql id="OnlineParams_common_group">
+		<trim prefix="GROUP BY" prefixOverrides=",">
+		</trim>
+	</sql>
+
+	<select id="query" resultMap="OnlineParamsResultMap">
+		SELECT * FROM `ONLINE_PARAMS` a
+		<include refid="OnlineParams_common_condition" />
+		<include refid="OnlineParams_common_group" />
+	</select>
+
+	<select id="count" resultType="int">
+		SELECT COUNT(1) FROM `ONLINE_PARAMS` a
+		<include refid="OnlineParams_common_condition" />
+		<include refid="OnlineParams_common_group" />
+	</select>
+
+
+	<insert id="add" parameterType="com.uhomed.entrance.model.OnlineParams" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO `ONLINE_PARAMS` (`PARAM_CODE`,`PARAM_VALUE`,`REMARK`,`GROUP_CODE`) VALUES (#{paramCode},#{paramValue},#{remark},#{groupCode})
+	</insert>
+
+	<delete id="delete" parameterType="com.uhomed.entrance.model.OnlineParams">
+		DELETE FROM `ONLINE_PARAMS` WHERE PARAM_CODE =
+		#{paramCode} AND GROUP_CODE = #{groupCode}
+	</delete>
+
+	<update id="update" parameterType="com.uhomed.entrance.model.OnlineParams">
+		UPDATE `ONLINE_PARAMS`
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="paramValue != null">
+				`API_METHOD_NAME` = #{apiMethodName},
+			</if>
+			<if test="remark != null">
+				`REMARK` = #{remark},
+			</if>
+		</trim>
+		WHERE PARAM_CODE = #{paramCode} AND GROUP_CODE = #{groupCode}
+	</update>
+
+</mapper>
