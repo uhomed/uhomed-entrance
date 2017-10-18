@@ -32,14 +32,14 @@ public class MethodParamView implements Serializable {
 	/** 参数描述 */
 	private String				paramDesc;
 	
-	private String				minLength;
+	private Integer				minLength;
 	
 	/**
 	 * Gets min length.
 	 *
 	 * @return the min length
 	 */
-	public String getMinLength() {
+	public Integer getMinLength() {
 		return minLength;
 	}
 	
@@ -48,7 +48,7 @@ public class MethodParamView implements Serializable {
 	 *
 	 * @param minLength the min length
 	 */
-	public void setMinLength(String minLength) {
+	public void setMinLength(Integer minLength) {
 		this.minLength = minLength;
 	}
 	
