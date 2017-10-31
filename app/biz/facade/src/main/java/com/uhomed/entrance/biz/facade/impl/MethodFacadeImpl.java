@@ -124,23 +124,23 @@ public class MethodFacadeImpl implements MethodFacade {
 				vo.setClassPath( classPath );
 				vo.setMethodName( methodName );
 				this.methodDubboService.update( vo );
-				
-				MethodParam del = new MethodParam();
-				del.setMethodId( id );
-				this.methodParamService.delete( del, false );
-				
-				// 更新参数
-				if (CollectionUtil.isNotEmpty( paramList )) {
-					List<MethodParam> creates = new ArrayList<>();
-					for (int i = 0; i < paramList.size(); i++) {
-						MethodParam param = paramList.get( i );
-						param.setParamIndex( i + 1 );
-						param.setMethodId( id );
-						creates.add( param );
-					}
-					if (CollectionUtil.isNotEmpty( creates )) {
-						this.methodParamService.batchCreate( creates );
-					}
+			}
+
+			MethodParam del = new MethodParam();
+			del.setMethodId( id );
+			this.methodParamService.delete( del, false );
+
+			// 更新参数
+			if (CollectionUtil.isNotEmpty( paramList )) {
+				List<MethodParam> creates = new ArrayList<>();
+				for (int i = 0; i < paramList.size(); i++) {
+					MethodParam param = paramList.get( i );
+					param.setParamIndex( i + 1 );
+					param.setMethodId( id );
+					creates.add( param );
+				}
+				if (CollectionUtil.isNotEmpty( creates )) {
+					this.methodParamService.batchCreate( creates );
 				}
 			}
 			
