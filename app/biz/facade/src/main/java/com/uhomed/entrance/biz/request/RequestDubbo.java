@@ -37,9 +37,9 @@ public class RequestDubbo implements Request {
 		long allTime = System.currentTimeMillis();
 		// 使用隐式传参方式 将sso token传入服务
 		RpcContext.getContext().setAttachment( "sso", sso );
-
-		Map<String,Object> params = RequestUtil.convertParams(bizParams,methodDTO);
-
+		
+		Map<String, Object> params = RequestUtil.convertParams( bizParams, methodDTO );
+		
 		Registry registry = null;
 		URL url = null;
 		
@@ -49,9 +49,9 @@ public class RequestDubbo implements Request {
 		if (StrUtil.isNotEmpty( router )) {
 			RegistryFactory registryFactory = ExtensionLoader.getExtensionLoader( RegistryFactory.class ).getAdaptiveExtension();
 			registry = registryFactory.getRegistry( URL.valueOf( "zookeeper://" + LoadConfig.getInstance().getValue( "zookeeper.ip.config" ) ) );
-			url = URL.valueOf(
-					"condition://0.0.0.0/com.xkhstar.webserver.biz.shared.facade.portal.UserLogonSharedFacade?category=routers&dynamic=false&enabled=true&force=true&name=ss&priority=12&router=condition&rule==> provider.host = "
-							+ router + "&runtime=true" );
+			url = URL.valueOf( "condition://0.0.0.0/" + dubbo.getClassPath()
+					+ "?category=routers&dynamic=false&enabled=true&force=true&name=ss&priority=12&router=condition&rule==> provider.host = " + router
+					+ "&runtime=true" );
 			registry.register( url );
 			try {
 				Thread.sleep( 100l );
@@ -63,8 +63,8 @@ public class RequestDubbo implements Request {
 			
 			long rpcTime = System.currentTimeMillis();
 			GenericService genericService = GenericServiceFactory.getInstance( methodDTO.getId().toString() );
-			List<String> types = (List<String>) params.get("types");
-			List<Object> values = (List<Object>) params.get("values");
+			List<String> types = (List<String>) params.get( "types" );
+			List<Object> values = (List<Object>) params.get( "values" );
 			String[] strings = new String[types.size()];
 			types.toArray( strings );
 			
@@ -138,15 +138,14 @@ public class RequestDubbo implements Request {
 		}
 		
 	}
-
-
+	
 	public static void main(String[] args) {
-		Map<String,Object> params = new HashMap<>();
-		params.put("java.lang.String","123123");
-		params.put("java.lang.String","321321");
-
-		System.out.println(params.keySet().toArray());
-		System.out.println(params.entrySet().toArray());
+		Map<String, Object> params = new HashMap<>();
+		params.put( "java.lang.String", "123123" );
+		params.put( "java.lang.String", "321321" );
+		
+		System.out.println( params.keySet().toArray() );
+		System.out.println( params.entrySet().toArray() );
 	}
 	
 }
