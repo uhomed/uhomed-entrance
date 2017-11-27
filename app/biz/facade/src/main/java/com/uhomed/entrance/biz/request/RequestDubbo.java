@@ -21,6 +21,8 @@ import com.uhomed.entrance.core.utils.common.LoadConfig;
 import com.uhomed.entrance.core.utils.logger.LoggerUtils;
 import com.xiaoleilu.hutool.util.StrUtil;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author
  * @version $$Id: , v 0.1 Exp $$
@@ -30,7 +32,8 @@ public class RequestDubbo implements Request {
 	
 	private static final Logger DEFAULT_LOGGER = Logger.getLogger( RequestDubbo.class );
 	
-	public Object request(String sso, String bizParams, MethodCacheDTO methodDTO, String router) throws ParamException {
+	public Object request(String sso, String bizParams, MethodCacheDTO methodDTO, String router,String requestBody,
+						  HttpServletRequest request) throws ParamException {
 		
 		// router = "10.0.0.169";
 		ModelAndView result = new ModelAndView();
@@ -38,7 +41,7 @@ public class RequestDubbo implements Request {
 		// 使用隐式传参方式 将sso token传入服务
 		RpcContext.getContext().setAttachment( "sso", sso );
 		
-		Map<String, Object> params = RequestUtil.convertParams( bizParams, methodDTO );
+		Map<String, Object> params = RequestUtil.convertParams( bizParams, methodDTO,request,requestBody );
 		
 		Registry registry = null;
 		URL url = null;
@@ -47,11 +50,13 @@ public class RequestDubbo implements Request {
 		MethodDubboDTO dubbo = (MethodDubboDTO) methodDTO.getMethodInfo();
 		
 		if (StrUtil.isNotEmpty( router )) {
-			RegistryFactory registryFactory = ExtensionLoader.getExtensionLoader( RegistryFactory.class ).getAdaptiveExtension();
-			registry = registryFactory.getRegistry( URL.valueOf( "zookeeper://" + LoadConfig.getInstance().getValue( "zookeeper.ip.config" ) ) );
+			RegistryFactory registryFactory = ExtensionLoader.getExtensionLoader( RegistryFactory.class )
+					.getAdaptiveExtension();
+			registry = registryFactory.getRegistry(
+					URL.valueOf( "zookeeper://" + LoadConfig.getInstance().getValue( "zookeeper.ip.config" ) ) );
 			url = URL.valueOf( "condition://0.0.0.0/" + dubbo.getClassPath()
-					+ "?category=routers&dynamic=false&enabled=true&force=true&name=ss&priority=12&router=condition&rule==> provider.host = " + router
-					+ "&runtime=true" );
+					+ "?category=routers&dynamic=false&enabled=true&force=true&name=ss&priority=12&router=condition&rule==> provider.host = "
+					+ router + "&runtime=true" );
 			registry.register( url );
 			try {
 				Thread.sleep( 100l );
@@ -69,8 +74,8 @@ public class RequestDubbo implements Request {
 			types.toArray( strings );
 			
 			Object o = genericService.$invoke( dubbo.getMethodName(), strings, values.toArray() );
-			DEFAULT_LOGGER
-					.info( "rpc request method [" + methodDTO.getApiMethodCode() + "] time [" + (System.currentTimeMillis() - rpcTime) + "ms]" );
+			DEFAULT_LOGGER.info( "rpc request method [" + methodDTO.getApiMethodCode() + "] time ["
+					+ (System.currentTimeMillis() - rpcTime) + "ms]" );
 			if (o != null) {
 				removeMapKeyIfClass( o );
 				return o;
@@ -93,8 +98,8 @@ public class RequestDubbo implements Request {
 			if (registry != null) {
 				registry.unregister( url );
 			}
-			DEFAULT_LOGGER
-					.info( "all request method [" + methodDTO.getApiMethodCode() + "] time [" + (System.currentTimeMillis() - allTime) + "ms]" );
+			DEFAULT_LOGGER.info( "all request method [" + methodDTO.getApiMethodCode() + "] time ["
+					+ (System.currentTimeMillis() - allTime) + "ms]" );
 		}
 		return result;
 	}

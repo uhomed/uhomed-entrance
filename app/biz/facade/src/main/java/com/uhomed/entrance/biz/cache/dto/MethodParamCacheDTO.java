@@ -1,5 +1,7 @@
 package com.uhomed.entrance.biz.cache.dto;
 
+import lombok.Data;
+
 import java.io.Serializable;
 
 /**
@@ -8,6 +10,7 @@ import java.io.Serializable;
  * @author
  * @version $$Id : , v 0.1 Exp $$
  */
+@Data
 public class MethodParamCacheDTO implements Serializable {
 	
 	private static final long	serialVersionUID	= 6246815945348911291L;
@@ -28,6 +31,7 @@ public class MethodParamCacheDTO implements Serializable {
 	private String				name;
 	
 	private Integer				minLength;
+	private String				clazzKey;
 	
 	/**
 	 * Instantiates a new MethodDTO param cache dto.
@@ -41,8 +45,8 @@ public class MethodParamCacheDTO implements Serializable {
 	 * @param name the name
 	 * @param minLength the min length
 	 */
-	public MethodParamCacheDTO(String code, Object clazz, Integer length, boolean require, String defaultValue, String clazzStr, String name,
-			Integer minLength) {
+	public MethodParamCacheDTO(String code, Object clazz, Integer length, boolean require, String defaultValue,
+			String clazzStr, String name, Integer minLength, String clazzKey) {
 		this.code = code;
 		this.clazz = clazz;
 		this.length = length;
@@ -51,149 +55,7 @@ public class MethodParamCacheDTO implements Serializable {
 		this.clazzStr = clazzStr;
 		this.name = name;
 		this.minLength = minLength;
+		this.clazzKey = clazzKey;
 	}
 	
-	/**
-	 * Gets min length.
-	 *
-	 * @return the min length
-	 */
-	public Integer getMinLength() {
-		return minLength;
-	}
-	
-	/**
-	 * Sets min length.
-	 *
-	 * @param minLength the min length
-	 */
-	public void setMinLength(Integer minLength) {
-		this.minLength = minLength;
-	}
-	
-	/**
-	 * Gets name.
-	 *
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
-	
-	/**
-	 * Sets name.
-	 *
-	 * @param name the name
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	/**
-	 * Gets clazz str.
-	 *
-	 * @return the clazz str
-	 */
-	public String getClazzStr() {
-		return clazzStr;
-	}
-	
-	/**
-	 * Sets clazz str.
-	 *
-	 * @param clazzStr the clazz str
-	 */
-	public void setClazzStr(String clazzStr) {
-		this.clazzStr = clazzStr;
-	}
-	
-	/**
-	 * Gets default value.
-	 *
-	 * @return the default value
-	 */
-	public String getDefaultValue() {
-		return defaultValue;
-	}
-	
-	/**
-	 * Sets default value.
-	 *
-	 * @param defaultValue the default value
-	 */
-	public void setDefaultValue(String defaultValue) {
-		this.defaultValue = defaultValue;
-	}
-	
-	/**
-	 * Gets code.
-	 *
-	 * @return the code
-	 */
-	public String getCode() {
-		return code;
-	}
-	
-	/**
-	 * Sets code.
-	 *
-	 * @param code the code
-	 */
-	public void setCode(String code) {
-		this.code = code;
-	}
-	
-	/**
-	 * Gets length.
-	 *
-	 * @return the length
-	 */
-	public Integer getLength() {
-		return length;
-	}
-	
-	/**
-	 * Sets length.
-	 *
-	 * @param length the length
-	 */
-	public void setLength(Integer length) {
-		this.length = length;
-	}
-	
-	/**
-	 * Is require boolean.
-	 *
-	 * @return the boolean
-	 */
-	public boolean isRequire() {
-		return require;
-	}
-	
-	/**
-	 * Sets require.
-	 *
-	 * @param require the require
-	 */
-	public void setRequire(boolean require) {
-		this.require = require;
-	}
-	
-	/**
-	 * Gets clazz.
-	 *
-	 * @return the clazz
-	 */
-	public Object getClazz() {
-		return clazz;
-	}
-	
-	/**
-	 * Sets clazz.
-	 *
-	 * @param clazz the clazz
-	 */
-	public void setClazz(Object clazz) {
-		this.clazz = clazz;
-	}
 }

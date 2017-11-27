@@ -10,7 +10,13 @@ import com.uhomed.entrance.biz.cache.dto.MethodParamCacheDTO;
 import com.uhomed.entrance.biz.exception.ParamException;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
+import org.springframework.http.HttpInputMessage;
+import org.springframework.http.server.ServletServerHttpRequest;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 /**
@@ -19,7 +25,7 @@ import java.util.*;
  */
 public class RequestUtil {
 
-    public static Map<String,Object> convertParams(String bizParams,MethodCacheDTO methodDTO) throws ParamException{
+    public static Map<String,Object> convertParams(String bizParams, MethodCacheDTO methodDTO, HttpServletRequest request,String requestBody) throws ParamException{
         Map<String,Object> result = new HashMap<>();
 
         List<String> types = new ArrayList<>();
@@ -41,6 +47,10 @@ public class RequestUtil {
                     Object value = json.get( p.getCode() );
                     if (value != null && value instanceof JSONArray) {
                         values.add(value);
+                    }else if(p.getClazzKey() . equalsIgnoreCase("RequestBody")){
+                        values.add(requestBody);
+                    }else if(p.getClazzKey().equalsIgnoreCase("ParameterMap")){
+                        values.add(request.getParameterMap());
                     } else if (p.getClazz() instanceof Number || p.getClazz() instanceof Date || p.getClazz() instanceof String
                             || p.getClazz() instanceof Boolean || p.getClazz() instanceof Collection || p.getClass().isEnum()) {
                         //如果是枚举的话，则不强转

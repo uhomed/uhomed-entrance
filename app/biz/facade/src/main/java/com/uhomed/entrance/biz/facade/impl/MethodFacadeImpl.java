@@ -54,8 +54,8 @@ public class MethodFacadeImpl implements MethodFacade {
 	private MethodCache			methodCache;
 	
 	@Override
-	public Result<Integer> createMethod(String groupCode, String apiMethodCode, String apiMethodName, String apiMethodVersion, String status,
-			String verifiSso, String mode, String methodDesc, String type) {
+	public Result<Integer> createMethod(String groupCode, String apiMethodCode, String apiMethodName,
+			String apiMethodVersion, String status, String verifiSso, String mode, String methodDesc, String type) {
 		Result<Integer> result = new Result<>();
 		
 		MethodInfo methodInfo = new MethodInfo();
@@ -97,8 +97,9 @@ public class MethodFacadeImpl implements MethodFacade {
 	}
 	
 	@Override
-	public Result<String> updateMethod(Integer id, String apiMethodCode, String apiMethodName, String apiMethodVersion, String status,
-			String verifiSso, String mode, String methodDesc, String type, String classPath, String methodName, List<MethodParam> paramList) {
+	public Result<String> updateMethod(Integer id, String apiMethodCode, String apiMethodName, String apiMethodVersion,
+			String status, String verifiSso, String mode, String methodDesc, String type, String classPath,
+			String methodName, List<MethodParam> paramList) {
 		Result<String> result = new Result<>();
 		
 		MethodInfo methodInfo = new MethodInfo();
@@ -125,11 +126,11 @@ public class MethodFacadeImpl implements MethodFacade {
 				vo.setMethodName( methodName );
 				this.methodDubboService.update( vo );
 			}
-
+			
 			MethodParam del = new MethodParam();
 			del.setMethodId( id );
 			this.methodParamService.delete( del, false );
-
+			
 			// 更新参数
 			if (CollectionUtil.isNotEmpty( paramList )) {
 				List<MethodParam> creates = new ArrayList<>();
@@ -153,8 +154,8 @@ public class MethodFacadeImpl implements MethodFacade {
 	}
 	
 	@Override
-	public PageModel<MethodInfoView> methodList(String groupCode, String search, String likeApiMethodName, String status, Integer currPage,
-			Integer pageSize) {
+	public PageModel<MethodInfoView> methodList(String groupCode, String search, String likeApiMethodName,
+			String status, Integer currPage, Integer pageSize) {
 		
 		PageModel<MethodInfoView> page = new PageModel<>();
 		
@@ -175,8 +176,9 @@ public class MethodFacadeImpl implements MethodFacade {
 				String verifiSso = StringUtils.equals( data.getVerifiSso(), "Y" ) ? "是" : "否";
 				params.clear();
 				params.put( "methodId", data.getId() );
-				infos.add( new MethodInfoView( data.getId(), data.getApiMethodCode(), data.getApiMethodName(), data.getApiMethodVersion(),
-						data.getStatus(), statusCH, data.getVerifiSso(), verifiSso, data.getMode(), data.getType(), data.getCreateTime(),
+				infos.add( new MethodInfoView( data.getId(), data.getApiMethodCode(), data.getApiMethodName(),
+						data.getApiMethodVersion(), data.getStatus(), statusCH, data.getVerifiSso(), verifiSso,
+						data.getMode(), data.getType(), data.getCreateTime(),
 						this.methodParamService.queryByCount( params ) ) );
 			}
 			page.setDatas( infos );
@@ -185,8 +187,9 @@ public class MethodFacadeImpl implements MethodFacade {
 	}
 	
 	@Override
-	public Result<Integer> createMethodDubbo(String groupCode, String apiMethodCode, String apiMethodName, String apiMethodVersion, String status,
-			String verifiSso, String mode, String methodDesc, String classPath, String methodName, List<MethodParam> paramList) {
+	public Result<Integer> createMethodDubbo(String groupCode, String apiMethodCode, String apiMethodName,
+			String apiMethodVersion, String status, String verifiSso, String mode, String methodDesc, String classPath,
+			String methodName, List<MethodParam> paramList) {
 		Result<Integer> result = new Result<>();
 		Map<String, Object> params = new HashMap<>();
 		params.put( "groupCode", groupCode );
@@ -198,8 +201,8 @@ public class MethodFacadeImpl implements MethodFacade {
 			return result;
 		}
 		
-		result = this.createMethod( groupCode, apiMethodCode, apiMethodName, apiMethodVersion, status, verifiSso, mode, methodDesc,
-				MethodTypeContext.DUBBO.toString() );
+		result = this.createMethod( groupCode, apiMethodCode, apiMethodName, apiMethodVersion, status, verifiSso, mode,
+				methodDesc, MethodTypeContext.DUBBO.toString() );
 		
 		if (result.isSuccess()) {
 			// 添加dubbo属性
@@ -226,11 +229,12 @@ public class MethodFacadeImpl implements MethodFacade {
 	}
 	
 	@Override
-	public Result<String> updateMethodDubbo(Integer id, String apiMethodCode, String apiMethodName, String apiMethodVersion, String status,
-			String verifiSso, String mode, String methodDesc, String classPath, String methodName) {
+	public Result<String> updateMethodDubbo(Integer id, String apiMethodCode, String apiMethodName,
+			String apiMethodVersion, String status, String verifiSso, String mode, String methodDesc, String classPath,
+			String methodName) {
 		
-		Result<String> result = this.updateMethodDubbo( id, apiMethodCode, apiMethodName, apiMethodVersion, status, verifiSso, mode, methodDesc,
-				classPath, methodName );
+		Result<String> result = this.updateMethodDubbo( id, apiMethodCode, apiMethodName, apiMethodVersion, status,
+				verifiSso, mode, methodDesc, classPath, methodName );
 		
 		if (result.isSuccess()) {
 			// 添加dubbo属性
@@ -279,8 +283,8 @@ public class MethodFacadeImpl implements MethodFacade {
 		result.setSuccess( true );
 		return result;
 	}
-
-	public enum SimpleEnum{
+	
+	public enum SimpleEnum {
 		SIMPLE_ENUM;
 	}
 	
@@ -311,8 +315,11 @@ public class MethodFacadeImpl implements MethodFacade {
 			} else if (List.class.getName().equalsIgnoreCase( clazzStr )) {
 				o = new ArrayList<>();
 			} else if (Enum.class.getName().equalsIgnoreCase( clazzStr )) {
-				//如果选择的是枚举类型
+				// 如果选择的是枚举类型
 				o = SimpleEnum.SIMPLE_ENUM;
+			} else if(Map.class.getName().equalsIgnoreCase(clazzStr)){
+				Map map = new HashMap<>();
+				o = map;
 			} else {
 				try {
 					o = Class.forName( clazzStr ).newInstance();
@@ -324,8 +331,9 @@ public class MethodFacadeImpl implements MethodFacade {
 					e.printStackTrace();
 				}
 			}
-			result.add( new MethodParamCacheDTO( param.getParamCode(), o, param.getLength(), StringUtils.equals( param.getParamRequire(), "Y" ),
-					param.getDefaultValue(), clazzStr, param.getParamName(), param.getMinLength() ) );
+			result.add( new MethodParamCacheDTO( param.getParamCode(), o, param.getLength(),
+					StringUtils.equals( param.getParamRequire(), "Y" ), param.getDefaultValue(), clazzStr,
+					param.getParamName(), param.getMinLength(), param.getParamType() ) );
 		}
 		return result;
 	}
@@ -343,8 +351,8 @@ public class MethodFacadeImpl implements MethodFacade {
 			MethodDubbo dubbo = this.methodDubboService.findById( method.getId() );
 			
 			MethodDTO m = new MethodDubboDTO( dubbo.getClassPath(), dubbo.getMethodName() );
-			this.methodCache.putMethod( method.getId(), method.getApiMethodCode(), method.getApiMethodVersion(), method.getStatus(),
-					method.getVerifiSso(), MethodTypeContext.DUBBO, method.getMode(),
+			this.methodCache.putMethod( method.getId(), method.getApiMethodCode(), method.getApiMethodVersion(),
+					method.getStatus(), method.getVerifiSso(), MethodTypeContext.DUBBO, method.getMode(),
 					this.methodParam2Cache( this.methodParamService.queryByPage( params, -1, -1 ) ), m );
 		}
 		
