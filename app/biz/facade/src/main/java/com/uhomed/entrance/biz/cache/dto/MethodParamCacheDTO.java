@@ -1,5 +1,6 @@
 package com.uhomed.entrance.biz.cache.dto;
 
+import com.uhomed.entrance.biz.context.MethodParamContext;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -13,25 +14,27 @@ import java.io.Serializable;
 @Data
 public class MethodParamCacheDTO implements Serializable {
 	
-	private static final long	serialVersionUID	= 6246815945348911291L;
+	private static final long			serialVersionUID	= 6246815945348911291L;
 	
 	/** 参数名 */
-	private String				code;
+	private String						code;
 	/** 参数类型 */
-	private Object				clazz;
+	private Object						clazz;
 	/** 最大长度（string时生效） */
-	private Integer				length;
+	private Integer						length;
 	/** 是否必传 */
-	private boolean				require;
+	private boolean						require;
 	/** 默认值 */
-	private String				defaultValue;
+	private String						defaultValue;
 	/** 包名类名 */
-	private String				clazzStr;
+	private String						clazzStr;
 	/** 参数名称 */
-	private String				name;
+	private String						name;
 	
-	private Integer				minLength;
-	private String				clazzKey;
+	private Integer						minLength;
+	private String						clazzKey;
+	
+	private MethodParamContext.Resource	resource;
 	
 	/**
 	 * Instantiates a new MethodDTO param cache dto.
@@ -46,7 +49,7 @@ public class MethodParamCacheDTO implements Serializable {
 	 * @param minLength the min length
 	 */
 	public MethodParamCacheDTO(String code, Object clazz, Integer length, boolean require, String defaultValue,
-			String clazzStr, String name, Integer minLength, String clazzKey) {
+			String clazzStr, String name, Integer minLength, String clazzKey, MethodParamContext.Resource resource) {
 		this.code = code;
 		this.clazz = clazz;
 		this.length = length;
@@ -56,6 +59,7 @@ public class MethodParamCacheDTO implements Serializable {
 		this.name = name;
 		this.minLength = minLength;
 		this.clazzKey = clazzKey;
+		this.resource = resource;
 	}
 	
 }

@@ -28,8 +28,8 @@ public interface MethodFacade {
 	 * @param methodDesc
 	 * @return
 	 */
-	Result<Integer> createMethod(String groupCode, String apiMethodCode, String apiMethodName, String apiMethodVersion, String status,
-			String verifiSso, String mode, String methodDesc, String type);
+	Result<Integer> createMethod(String groupCode, String apiMethodCode, String apiMethodName, String apiMethodVersion,
+			String status, String verifiSso, String mode, String methodDesc, String type);
 	
 	/**
 	 * 删除
@@ -52,8 +52,9 @@ public interface MethodFacade {
 	 * @param methodDesc
 	 * @return
 	 */
-	Result<String> updateMethod(Integer id, String apiMethodCode, String apiMethodName, String apiMethodVersion, String status, String verifiSso,
-			String mode, String methodDesc, String type, String classPath, String methodName, List<MethodParam> paramList);
+	Result<String> updateMethod(Integer id, String apiMethodCode, String apiMethodName, String apiMethodVersion,
+			String status, String verifiSso, String mode, String methodDesc, String type, String classPath,
+			String methodName, List<MethodParam> paramList);
 	
 	/**
 	 * @param search
@@ -63,8 +64,8 @@ public interface MethodFacade {
 	 * @param pageSize
 	 * @return
 	 */
-	PageModel<MethodInfoView> methodList(String groupCode, String search, String likeApiMethodName, String status, Integer currPage,
-			Integer pageSize);
+	PageModel<MethodInfoView> methodList(String groupCode, String search, String likeApiMethodName, String status,
+			Integer currPage, Integer pageSize);
 	
 	/**
 	 * 添加dubbo接口
@@ -80,8 +81,9 @@ public interface MethodFacade {
 	 * @param methodName
 	 * @return
 	 */
-	Result<Integer> createMethodDubbo(String groupCode, String apiMethodCode, String apiMethodName, String apiMethodVersion, String status,
-			String verifiSso, String mode, String methodDesc, String classPath, String methodName, List<MethodParam> paramList);
+	Result<Integer> createMethodDubbo(String groupCode, String apiMethodCode, String apiMethodName,
+			String apiMethodVersion, String status, String verifiSso, String mode, String methodDesc, String classPath,
+			String methodName, List<MethodParam> paramList);
 	
 	/**
 	 * 更新dubbo接口
@@ -98,8 +100,8 @@ public interface MethodFacade {
 	 * @param methodName
 	 * @return
 	 */
-	Result<String> updateMethodDubbo(Integer id, String apiMethodCode, String apiMethodName, String apiMethodVersion, String status, String verifiSso,
-			String mode, String methodDesc, String classPath, String methodName);
+	Result<String> updateMethodDubbo(Integer id, String apiMethodCode, String apiMethodName, String apiMethodVersion,
+			String status, String verifiSso, String mode, String methodDesc, String classPath, String methodName);
 	
 	/**
 	 * 批量更新参数

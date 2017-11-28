@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.uhomed.entrance.biz.context.MethodParamContext;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
 
@@ -317,7 +318,7 @@ public class MethodFacadeImpl implements MethodFacade {
 			} else if (Enum.class.getName().equalsIgnoreCase( clazzStr )) {
 				// 如果选择的是枚举类型
 				o = SimpleEnum.SIMPLE_ENUM;
-			} else if(Map.class.getName().equalsIgnoreCase(clazzStr)){
+			} else if (Map.class.getName().equalsIgnoreCase( clazzStr )) {
 				Map map = new HashMap<>();
 				o = map;
 			} else {
@@ -333,7 +334,8 @@ public class MethodFacadeImpl implements MethodFacade {
 			}
 			result.add( new MethodParamCacheDTO( param.getParamCode(), o, param.getLength(),
 					StringUtils.equals( param.getParamRequire(), "Y" ), param.getDefaultValue(), clazzStr,
-					param.getParamName(), param.getMinLength(), param.getParamType() ) );
+					param.getParamName(), param.getMinLength(), param.getParamType(),
+					MethodParamContext.Resource.valueOf( param.getResource() ) ) );
 		}
 		return result;
 	}

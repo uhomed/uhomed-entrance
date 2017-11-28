@@ -50,8 +50,8 @@ public class GatewayController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/gateway", method = { RequestMethod.POST, RequestMethod.GET })
-	public Object gateway(String method, String bizParams, String version, String format, String sso, String timestamp, String client,
-						  String clientVersion, String router, @RequestBody(required = false) String requestBody) {
+	public Object gateway(String method, String bizParams, String version, String format, String sso, String timestamp,
+			String client, String clientVersion, String router, @RequestBody(required = false) String requestBody) {
 		ModelAndView result = new ModelAndView();
 		
 		if (StringUtils.isEmpty( method )) {
@@ -91,7 +91,7 @@ public class GatewayController extends BaseController {
 		}
 		
 		try {
-			Object o = request.request( sso, bizParams, methodDTO, router,requestBody,super.request );
+			Object o = request.request( sso, bizParams, methodDTO, router, requestBody, super.request );
 			if (o != null) {
 				return o;
 			}
