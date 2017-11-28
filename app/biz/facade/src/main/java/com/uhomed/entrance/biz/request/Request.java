@@ -22,6 +22,6 @@ public interface Request {
 	 * @throws ParamException
 	 * @throws RpcException
 	 */
-	Object request(String sso, String bizParams, MethodCacheDTO methodDTO, String router, String requestBody,
-			HttpServletRequest request) throws ParamException, RpcException;
+	Object request(String sso, String bizParams, MethodCacheDTO methodDTO, String router, HttpServletRequest request)
+			throws ParamException, RpcException;
 }

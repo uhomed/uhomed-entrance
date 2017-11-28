@@ -1,5 +1,6 @@
 package com.uhomed.entrance.biz.request;
 
+import com.alibaba.dubbo.common.utils.IOUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -16,8 +17,10 @@ import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.*;
 
 /**
@@ -27,12 +30,12 @@ import java.util.*;
 public class RequestUtil {
 	
 	public static Map<String, Object> convertParams(String bizParams, MethodCacheDTO methodDTO,
-			HttpServletRequest request, String requestBody) throws ParamException {
+			HttpServletRequest request) throws ParamException {
 		Map<String, Object> result = new HashMap<>();
 		
 		List<String> types = new ArrayList<>();
 		List<Object> values = new ArrayList<>();
-		
+
 		if (CollectionUtil.isNotEmpty( methodDTO.getParams() )) {
 			List<MethodParamCacheDTO> paramList = methodDTO.getParams();
 			JSONObject json = null;
@@ -50,7 +53,15 @@ public class RequestUtil {
 				if (MethodParamContext.Resource.HEADERS == p.getResource()) {
 					value = request.getHeader( p.getCode() );
 				} else if (MethodParamContext.Resource.REQUEST_BODY == p.getResource()) {
-					value = requestBody;
+					BufferedReader reader = null;
+					try {
+						if(request.getInputStream() != null){
+							reader = new BufferedReader(new InputStreamReader(request.getInputStream()));
+							value = IOUtils.read(reader);
+						}
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				} else if (MethodParamContext.Resource.URL == p.getResource()) {
 					value = urlParams.get( p.getCode() );
 				} else if (MethodParamContext.Resource.BIZ_PARAMS == p.getResource()) {

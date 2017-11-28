@@ -32,7 +32,7 @@ public class RequestDubbo implements Request {
 	
 	private static final Logger DEFAULT_LOGGER = Logger.getLogger( RequestDubbo.class );
 	
-	public Object request(String sso, String bizParams, MethodCacheDTO methodDTO, String router,String requestBody,
+	public Object request(String sso, String bizParams, MethodCacheDTO methodDTO, String router,
 						  HttpServletRequest request) throws ParamException {
 		
 		// router = "10.0.0.169";
@@ -41,7 +41,7 @@ public class RequestDubbo implements Request {
 		// 使用隐式传参方式 将sso token传入服务
 		RpcContext.getContext().setAttachment( "sso", sso );
 		
-		Map<String, Object> params = RequestUtil.convertParams( bizParams, methodDTO,request,requestBody );
+		Map<String, Object> params = RequestUtil.convertParams( bizParams, methodDTO,request );
 		
 		Registry registry = null;
 		URL url = null;
