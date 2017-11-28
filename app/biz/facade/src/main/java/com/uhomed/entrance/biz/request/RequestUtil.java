@@ -1,8 +1,17 @@
 package com.uhomed.entrance.biz.request;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
 import com.alibaba.dubbo.common.utils.IOUtils;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.util.TypeUtils;
@@ -12,16 +21,6 @@ import com.uhomed.entrance.biz.context.MethodParamContext;
 import com.uhomed.entrance.biz.exception.ParamException;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
-import org.springframework.http.HttpInputMessage;
-import org.springframework.http.server.ServletServerHttpRequest;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.*;
 
 /**
  * @author
@@ -35,7 +34,7 @@ public class RequestUtil {
 		
 		List<String> types = new ArrayList<>();
 		List<Object> values = new ArrayList<>();
-
+		
 		if (CollectionUtil.isNotEmpty( methodDTO.getParams() )) {
 			List<MethodParamCacheDTO> paramList = methodDTO.getParams();
 			JSONObject json = null;
@@ -55,9 +54,9 @@ public class RequestUtil {
 				} else if (MethodParamContext.Resource.REQUEST_BODY == p.getResource()) {
 					BufferedReader reader = null;
 					try {
-						if(request.getInputStream() != null){
-							reader = new BufferedReader(new InputStreamReader(request.getInputStream()));
-							value = IOUtils.read(reader);
+						if (request.getInputStream() != null) {
+							reader = new BufferedReader( new InputStreamReader( request.getInputStream() ) );
+							value = IOUtils.read( reader );
 						}
 					} catch (IOException e) {
 						e.printStackTrace();
@@ -78,22 +77,26 @@ public class RequestUtil {
 				}
 				
 				if (value != null) {
-                    if (p.getClazz() instanceof String) {
-						String tempValue = String.valueOf( value );
+					if (p.getClazz() instanceof String) {
+						//兼容下   前台传数字，后台字符串问题
+						String tempValue = TypeUtils.castToJavaBean( value, String.class );
 						// 验证string长度
 						if (p.getLength() != 0 && p.getLength() < tempValue.length()) {
 							throw new ParamException( p.getName() + "长度大于" + p.getLength() + "！" );
 						} else if (p.getMinLength() != 0 && tempValue.length() < p.getMinLength()) {
 							throw new ParamException( p.getName() + "长度小于" + p.getLength() + "！" );
 						}
-					} else if(p.getClazzKey().equalsIgnoreCase(Object.class.getName())){
-                        //是否是object类型
+						value = tempValue;
+					} else if (p.getClazz().getClass().getName().equalsIgnoreCase( Object.class.getName() )) {
+						// 是否是object类型
 						Map<String, Object> domain = JSON.parseObject( String.valueOf( value ),
-                                new TypeReference<Map<String, Object>>() {} );
+								new TypeReference<Map<String, Object>>() {
+								} );
 						value = domain;
 					}
-					values.add(value);
 				}
+				
+				values.add( value );
 				
 				// 是否是自定义对象
 				// try {
