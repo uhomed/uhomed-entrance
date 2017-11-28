@@ -35,6 +35,13 @@ public class StatisticsInterceptor implements MethodInterceptor {
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 		String method = request.getParameter( "method" );
 		String version = request.getParameter( "version" );
+		if(StrUtil.isEmpty(method) || StrUtil.isEmpty(version)){
+			ModelAndView result = new ModelAndView();
+			result.addObject( "success", false );
+			result.addObject( "message", "method为空或者version为空！" );
+			result.addObject( "code", "100001" );
+			return result;
+		}
 		
 		MethodCacheDTO methodDTO = this.methodCache.getMethod( method, version );
 		MethodStatistics statistics = new MethodStatistics();
