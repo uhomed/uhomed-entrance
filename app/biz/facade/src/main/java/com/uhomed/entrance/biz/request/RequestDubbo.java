@@ -40,7 +40,9 @@ public class RequestDubbo implements Request {
 		long allTime = System.currentTimeMillis();
 		// 使用隐式传参方式 将sso token传入服务
 		RpcContext.getContext().setAttachment( "sso", sso );
-		
+		//返回请求状态码
+		RpcContext.getContext().setAttachment("Content-Type",request.getHeader("Content-Type"));
+
 		Map<String, Object> params = RequestUtil.convertParams( bizParams, methodDTO,request );
 		
 		Registry registry = null;
