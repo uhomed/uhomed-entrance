@@ -57,9 +57,18 @@ public class RequestUtil {
 						if (request.getInputStream() != null) {
 							reader = new BufferedReader( new InputStreamReader( request.getInputStream() ) );
 							value = IOUtils.read( reader );
+
 						}
 					} catch (IOException e) {
-						e.printStackTrace();
+						throw new ParamException( "requestBody获取失败！" );
+					} finally {
+						if(reader != null){
+							try {
+								reader.close();
+							} catch (IOException e) {
+								throw new ParamException( "requestBody获取失败！" );
+							}
+						}
 					}
 				} else if (MethodParamContext.Resource.URL == p.getResource()) {
 					value = urlParams.get( p.getCode() );
@@ -78,7 +87,7 @@ public class RequestUtil {
 				
 				if (value != null) {
 					if (p.getClazz() instanceof String) {
-						//兼容下   前台传数字，后台字符串问题
+						// 兼容 前台传数字，后台字符串问题 {"test":123}
 						String tempValue = TypeUtils.castToJavaBean( value, String.class );
 						// 验证string长度
 						if (p.getLength() != 0 && p.getLength() < tempValue.length()) {
@@ -87,6 +96,9 @@ public class RequestUtil {
 							throw new ParamException( p.getName() + "长度小于" + p.getLength() + "！" );
 						}
 						value = tempValue;
+					} else if (p.getClazz() instanceof Number && !(value instanceof Number)) {
+						//兼容  {"test":"123"}
+						value = TypeUtils.castToJavaBean( value, p.getClazz().getClass() );
 					} else if (p.getClazz().getClass().getName().equalsIgnoreCase( Object.class.getName() )) {
 						// 是否是object类型
 						Map<String, Object> domain = JSON.parseObject( String.valueOf( value ),

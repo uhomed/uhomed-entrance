@@ -41,7 +41,8 @@ public class RequestDubbo implements Request {
 		// 使用隐式传参方式 将sso token传入服务
 		RpcContext.getContext().setAttachment( "sso", sso );
 		//返回请求状态码
-		RpcContext.getContext().setAttachment("Content-Type",request.getHeader("Content-Type"));
+		RpcContext.getContext().setAttachment("Content-Type",request.getContentType());
+		RpcContext.getContext().setAttachment("encoding",request.getCharacterEncoding());
 
 		Map<String, Object> params = RequestUtil.convertParams( bizParams, methodDTO,request );
 		
