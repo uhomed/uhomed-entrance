@@ -218,6 +218,14 @@ public class MethodFacadeImpl implements MethodFacade {
 				for (MethodParam methodParam : paramList) {
 					methodParam.setMethodId( result.getData() );
 					methodParam.setParamIndex( i );
+					//TODO Object类型特殊处理
+					if(methodParam.getParamType().equalsIgnoreCase("Object")){
+			
+					}else {
+						//其他类型默认去取
+						methodParam.setClazz(ParamClazzContext.getClazz(methodParam.getParamType()));
+					}
+
 					i++;
 				}
 				this.methodParamService.batchCreate( paramList );

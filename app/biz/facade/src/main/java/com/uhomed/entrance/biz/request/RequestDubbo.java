@@ -31,7 +31,8 @@ import javax.servlet.http.HttpServletRequest;
 public class RequestDubbo implements Request {
 	
 	private static final Logger DEFAULT_LOGGER = Logger.getLogger( RequestDubbo.class );
-	
+
+
 	public Object request(String sso, String bizParams, MethodCacheDTO methodDTO, String router,
 						  HttpServletRequest request) throws ParamException {
 		
@@ -68,14 +69,14 @@ public class RequestDubbo implements Request {
 			}
 		}
 		try {
-			
+
 			long rpcTime = System.currentTimeMillis();
 			GenericService genericService = GenericServiceFactory.getInstance( methodDTO.getId().toString() );
 			List<String> types = (List<String>) params.get( "types" );
 			List<Object> values = (List<Object>) params.get( "values" );
 			String[] strings = new String[types.size()];
 			types.toArray( strings );
-			
+			//image
 			Object o = genericService.$invoke( dubbo.getMethodName(), strings, values.toArray() );
 			DEFAULT_LOGGER.info( "rpc request method [" + methodDTO.getApiMethodCode() + "] time ["
 					+ (System.currentTimeMillis() - rpcTime) + "ms]" );

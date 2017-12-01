@@ -104,6 +104,7 @@ public class RequestUtil {
 						Map<String, Object> domain = JSON.parseObject( String.valueOf( value ),
 								new TypeReference<Map<String, Object>>() {
 								} );
+
 						value = domain;
 					}
 				}
