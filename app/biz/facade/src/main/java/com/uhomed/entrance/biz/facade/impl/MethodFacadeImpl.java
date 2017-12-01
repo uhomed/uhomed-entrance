@@ -321,6 +321,8 @@ public class MethodFacadeImpl implements MethodFacade {
 			} else if (Map.class.getName().equalsIgnoreCase( clazzStr )) {
 				Map map = new HashMap<>();
 				o = map;
+			} else if (Object.class.getName().equalsIgnoreCase( clazzStr )) {
+				o = new Object();
 			} else {
 				try {
 					o = Class.forName( clazzStr ).newInstance();
@@ -333,8 +335,8 @@ public class MethodFacadeImpl implements MethodFacade {
 				}
 			}
 			result.add( new MethodParamCacheDTO( param.getParamCode(), o, param.getLength(),
-					StringUtils.equals( param.getParamRequire(), "Y" ), param.getDefaultValue(), clazzStr,
-					param.getParamName(), param.getMinLength(), param.getParamType(),
+					StringUtils.equals( param.getParamRequire(), "Y" ), param.getDefaultValue(), param.getClazz(),
+					param.getParamName(), param.getMinLength(),
 					MethodParamContext.Resource.valueOf( param.getResource() ) ) );
 		}
 		return result;

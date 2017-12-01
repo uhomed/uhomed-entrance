@@ -8,6 +8,7 @@
         <result property="paramCode" column="PARAM_CODE"/>
         <result property="paramName" column="PARAM_NAME"/>
         <result property="paramType" column="PARAM_TYPE"/>
+        <result property="clazz" column="CLAZZ"/>
         <result property="paramIndex" column="PARAM_INDEX"/>
         <result property="paramRequire" column="PARAM_REQUIRE"/>
         <result property="length" column="LENGTH"/>
@@ -49,7 +50,7 @@
 	</select>
 
     <insert id="add" parameterType="com.uhomed.entrance.model.MethodParam" useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO `METHOD_PARAM` (`METHOD_ID`,`PARAM_CODE`,`PARAM_NAME`,`PARAM_TYPE`,`PARAM_INDEX`,`PARAM_REQUIRE`,`LENGTH`,`DEFAULT_VALUE`,`PARAM_DESC`,`MIN_LENGTH`,`RESOURCE`) VALUES (#{methodId},#{paramCode},#{paramName},#{paramType},#{paramIndex},#{paramRequire},#{length},#{defaultValue},#{paramDesc},#{minLength},#{resource})
+		INSERT INTO `METHOD_PARAM` (`METHOD_ID`,`PARAM_CODE`,`PARAM_NAME`,`PARAM_TYPE`,`PARAM_INDEX`,`PARAM_REQUIRE`,`LENGTH`,`DEFAULT_VALUE`,`PARAM_DESC`,`MIN_LENGTH`,`RESOURCE`,`CLAZZ`) VALUES (#{methodId},#{paramCode},#{paramName},#{paramType},#{paramIndex},#{paramRequire},#{length},#{defaultValue},#{paramDesc},#{minLength},#{resource},#{clazz})
 	</insert>
 
     <delete id="delete" parameterType="com.uhomed.entrance.model.MethodParam">
@@ -99,6 +100,9 @@
             </if>
             <if test="resource != null">
                 `RESOURCE` = #{resource},
+            </if>
+            <if test="clazz != null">
+                `CLAZZ` = #{clazz},
             </if>
         </trim>
         WHERE ID = #{id}

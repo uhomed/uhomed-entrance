@@ -109,54 +109,6 @@ public class RequestUtil {
 				}
 				
 				values.add( value );
-				
-				// 是否是自定义对象
-				// try {
-				// value = json.get( p.getCode() );
-				// if (value != null && value instanceof JSONArray) {
-				// values.add( value );
-				// } else if (p.getClazzKey().equalsIgnoreCase( "RequestBody" )) {
-				// values.add( requestBody );
-				// } else if (p.getClazzKey().equalsIgnoreCase( "ParameterMap" )) {
-				// values.add( request.getParameterMap() );
-				// } else if (p.getClazz() instanceof Number || p.getClazz() instanceof Date
-				// || p.getClazz() instanceof String || p.getClazz() instanceof Boolean
-				// || p.getClazz() instanceof Collection || p.getClass().isEnum()) {
-				// // 如果是枚举的话，则不强转
-				// if (!p.getClass().isEnum()) {
-				// value = TypeUtils.castToJavaBean( value, p.getClazz().getClass() );
-				// }
-				//
-				// if (StrUtil.isNotEmpty( p.getDefaultValue() ) && value == null) {
-				// value = p.getDefaultValue();
-				// }
-				//
-				// // 是否必传并且为空时直接抛出异常
-				// if (p.isRequire() && value == null) {
-				// throw new ParamException( p.getName() + "不能为空！" );
-				// }
-				//
-				// // 验证value长度
-				// if (value instanceof String) {
-				// String tempValue = String.valueOf( value );
-				// if (p.getLength() != 0 && p.getLength() < tempValue.length()) {
-				// throw new ParamException( p.getName() + "长度大于" + p.getLength() + "！" );
-				// } else if (p.getMinLength() != 0 && tempValue.length() < p.getMinLength()) {
-				// throw new ParamException( p.getName() + "长度小于" + p.getLength() + "！" );
-				// }
-				// }
-				// values.add( value );
-				// } else {
-				// Map<String, Object> domain = JSON.parseObject( json.getString( p.getCode() ),
-				// new TypeReference<Map<String, Object>>() {
-				// } );
-				// values.add( domain );
-				// }
-				// } catch (NullPointerException e) {
-				// if (p.isRequire()) {
-				// throw new ParamException( p.getCode() + "不能为空！" );
-				// }
-				// }
 			}
 		}
 		result.put( "types", types );

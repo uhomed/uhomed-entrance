@@ -38,5 +38,7 @@ public class MethodParam implements Serializable {
 	private Integer				minLength;
 	/** 参数来源 */
 	private String				resource;
+	/** 参数完整名 java.lang.String */
+	private String				clazz;
 	
 }

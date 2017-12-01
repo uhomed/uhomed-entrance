@@ -18,7 +18,7 @@ public class MethodParamCacheDTO implements Serializable {
 	
 	/** 参数名 */
 	private String						code;
-	/** 参数类型 */
+	
 	private Object						clazz;
 	/** 最大长度（string时生效） */
 	private Integer						length;
@@ -32,8 +32,7 @@ public class MethodParamCacheDTO implements Serializable {
 	private String						name;
 	
 	private Integer						minLength;
-	private String						clazzKey;
-	
+
 	private MethodParamContext.Resource	resource;
 	
 	/**
@@ -49,7 +48,7 @@ public class MethodParamCacheDTO implements Serializable {
 	 * @param minLength the min length
 	 */
 	public MethodParamCacheDTO(String code, Object clazz, Integer length, boolean require, String defaultValue,
-			String clazzStr, String name, Integer minLength, String clazzKey, MethodParamContext.Resource resource) {
+			String clazzStr, String name, Integer minLength, MethodParamContext.Resource resource) {
 		this.code = code;
 		this.clazz = clazz;
 		this.length = length;
@@ -58,7 +57,6 @@ public class MethodParamCacheDTO implements Serializable {
 		this.clazzStr = clazzStr;
 		this.name = name;
 		this.minLength = minLength;
-		this.clazzKey = clazzKey;
 		this.resource = resource;
 	}
 	

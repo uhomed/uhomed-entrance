@@ -24,8 +24,6 @@ public class ParamClazzContext {
         clazzMap.put("List","java.util.List");
         clazzMap.put("Object","java.lang.Object");
         clazzMap.put("Enum","java.lang.Enum");
-        clazzMap.put("RequestBody","java.lang.String");
-        clazzMap.put("ParameterMap","java.util.Map");
     }
 
     public static String getClazz(String type){

@@ -53,7 +53,7 @@ public class GatewayController extends BaseController {
 	public Object gateway(String method, String bizParams, String version, String format, String sso, String timestamp,
 			String client, String clientVersion, String router) {
 		ModelAndView result = new ModelAndView();
-		
+
 		if (StringUtils.isEmpty( method )) {
 			super.setFailMessage( result, "方法名不能为空！" );
 			return result;
