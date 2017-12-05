@@ -121,9 +121,9 @@ public class RequestUtil {
 		Map<String, String> map = null;
 		if (url != null && url.indexOf( "&" ) > -1 && url.indexOf( "=" ) > -1) {
 			map = new HashMap<>();
-			String[] arrTemp = url.split( "&" );
+			String[] arrTemp = url.split( "&",-1 );
 			for (String str : arrTemp) {
-				String[] qs = str.split( "=" );
+				String[] qs = str.split( "=",-1 );
 				map.put( qs[ 0 ], qs[ 1 ] );
 			}
 		}

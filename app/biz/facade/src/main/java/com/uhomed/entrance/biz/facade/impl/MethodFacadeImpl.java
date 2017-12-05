@@ -219,9 +219,7 @@ public class MethodFacadeImpl implements MethodFacade {
 					methodParam.setMethodId( result.getData() );
 					methodParam.setParamIndex( i );
 					//TODO Object类型特殊处理
-					if(methodParam.getParamType().equalsIgnoreCase("Object")){
-			
-					}else {
+					if(!methodParam.getParamType().equalsIgnoreCase("Object")){
 						//其他类型默认去取
 						methodParam.setClazz(ParamClazzContext.getClazz(methodParam.getParamType()));
 					}
