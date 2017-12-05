@@ -113,7 +113,7 @@ public class MethodFacadeImpl implements MethodFacade {
 		methodInfo.setMode( mode );
 		methodInfo.setType( type );
 		methodInfo.setId( id );
-		
+
 		int count = (int) this.methodInfoService.update( methodInfo );
 		if (count > 0) {
 			result.setSuccess( true );
@@ -139,6 +139,12 @@ public class MethodFacadeImpl implements MethodFacade {
 					MethodParam param = paramList.get( i );
 					param.setParamIndex( i + 1 );
 					param.setMethodId( id );
+//					param.setClazz(ParamClazzContext.getClazz(param.getParamType()));
+					//TODO Object类型特殊处理
+					if(!param.getParamType().equalsIgnoreCase("Object")){
+						//其他类型默认去取
+						param.setClazz(ParamClazzContext.getClazz(param.getParamType()));
+					}
 					creates.add( param );
 				}
 				if (CollectionUtil.isNotEmpty( creates )) {
