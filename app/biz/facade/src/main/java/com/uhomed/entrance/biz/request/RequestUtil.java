@@ -34,6 +34,10 @@ public class RequestUtil {
 		
 		List<String> types = new ArrayList<>();
 		List<Object> values = new ArrayList<>();
+
+		if(StrUtil.isEmpty(bizParams)){
+			bizParams = "{}";
+		}
 		
 		if (CollectionUtil.isNotEmpty( methodDTO.getParams() )) {
 			List<MethodParamCacheDTO> paramList = methodDTO.getParams();
@@ -43,6 +47,7 @@ public class RequestUtil {
 			} catch (Exception e) {
 				throw new ParamException( "bizParams解析错误！" );
 			}
+
 			// 获取url后参数
 			Map<String, String> urlParams = toMap( request.getQueryString() );
 			for (MethodParamCacheDTO p : paramList) {
