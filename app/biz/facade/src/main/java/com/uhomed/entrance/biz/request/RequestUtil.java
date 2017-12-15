@@ -3,10 +3,7 @@ package com.uhomed.entrance.biz.request;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -111,6 +108,10 @@ public class RequestUtil {
 								} );
 
 						value = domain;
+					} else if(p.getClazz() instanceof Date){
+						//兼容常用的时间类型
+						Date d = TypeUtils.castToDate(value);
+						value = d;
 					}
 				}
 				
