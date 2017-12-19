@@ -7,8 +7,10 @@ import com.uhomed.entrance.biz.cache.dto.MethodCacheDTO;
 import com.uhomed.entrance.biz.cache.dto.MethodDTO;
 import com.uhomed.entrance.biz.cache.dto.MethodParamCacheDTO;
 import com.uhomed.entrance.biz.context.MethodTypeContext;
+import com.uhomed.entrance.biz.facade.OnlineParamsFacade;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -20,9 +22,17 @@ import java.util.concurrent.ConcurrentHashMap;
 public class OnlineParamsCache {
 	
 	private ConcurrentHashMap<String, String> methodCache = new ConcurrentHashMap<>();
+
+	@Resource
+	private OnlineParamsFacade onlineParamsFacade;
 	
 	public String getValue(String group, String code) {
-		return methodCache.get( this.buildKey( group, code ) );
+		String s = methodCache.get( this.buildKey( group, code ) );
+		if(s == null){
+			this.onlineParamsFacade.initCache();
+			s = methodCache.get(this.buildKey( group, code ));
+		}
+		return s;
 	}
 	
 	public void putValue(String group, String code, String value) {

@@ -111,5 +111,16 @@
             <artifactId>hutool-crypto</artifactId>
             <version>3.0.4</version>
         </dependency>
+
+        <!--<dependency>-->
+            <!--<groupId>com.googlecode.sizeofag</groupId>-->
+            <!--<artifactId>sizeofag</artifactId>-->
+            <!--<version>1.0.0</version>-->
+        <!--</dependency>-->
+        <dependency>
+            <groupId>org.ehcache</groupId>
+            <artifactId>sizeof</artifactId>
+            <version>0.3.0</version>
+        </dependency>
     </dependencies>
 </project>

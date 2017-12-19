@@ -121,6 +121,13 @@ public class DateUtils {
 		cal.add(Calendar.DATE, days);
 		return cal.getTime();
 	}
+
+	public static java.util.Date addSecond(java.util.Date date,Integer second){
+		java.util.Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(Calendar.SECOND, second);
+		return cal.getTime();
+	}
 	
 	public static java.util.Date addHour(java.util.Date date,
 			Integer hour) {

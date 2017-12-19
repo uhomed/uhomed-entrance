@@ -34,6 +34,46 @@ public class MethodInfo implements Serializable {
 	private Date				createTime;
 	/** 分组code */
 	private String				groupCode;
+	/** 是否缓存 */
+	private String				cache;
+	/** 缓存秒数 */
+	private Integer				second;
+	
+	/**
+	 * Gets cache.
+	 *
+	 * @return the cache
+	 */
+	public String getCache() {
+		return cache;
+	}
+	
+	/**
+	 * Sets cache.
+	 *
+	 * @param cache the cache
+	 */
+	public void setCache(String cache) {
+		this.cache = cache;
+	}
+	
+	/**
+	 * Gets second.
+	 *
+	 * @return the second
+	 */
+	public Integer getSecond() {
+		return second;
+	}
+	
+	/**
+	 * Sets second.
+	 *
+	 * @param second the second
+	 */
+	public void setSecond(Integer second) {
+		this.second = second;
+	}
 	
 	/**
 	 * Gets group code.

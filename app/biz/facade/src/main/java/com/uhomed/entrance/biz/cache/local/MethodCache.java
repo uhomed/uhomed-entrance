@@ -7,11 +7,14 @@ import com.alibaba.druid.util.StringUtils;
 import com.uhomed.entrance.biz.cache.GenericServiceFactory;
 import com.uhomed.entrance.biz.cache.dto.MethodDTO;
 import com.uhomed.entrance.biz.cache.dto.MethodParamCacheDTO;
+import com.uhomed.entrance.biz.facade.MethodFacade;
 import org.springframework.stereotype.Component;
 
 import com.google.common.base.Joiner;
 import com.uhomed.entrance.biz.cache.dto.MethodCacheDTO;
 import com.uhomed.entrance.biz.context.MethodTypeContext;
+
+import javax.annotation.Resource;
 
 /**
  * @author
@@ -21,17 +24,25 @@ import com.uhomed.entrance.biz.context.MethodTypeContext;
 public class MethodCache {
 	
 	private ConcurrentHashMap<String, MethodCacheDTO> methodCache = new ConcurrentHashMap<>();
+
+	@Resource
+	private MethodFacade methodFacade;
 	
 	public MethodCacheDTO getMethod(String apiMethodCode, String apiMethodVersion) {
-		return methodCache.get( this.buildKey( apiMethodCode, apiMethodVersion ) );
+		MethodCacheDTO method = methodCache.get( this.buildKey( apiMethodCode, apiMethodVersion ) );
+		if(method == null){
+			return this.methodFacade.getMethodCacheDTO(apiMethodCode,apiMethodVersion);
+		}
+		return method;
 	}
 	
-	public void putMethod(Integer id, String apiMethodCode, String apiMethodVersion, String status, String verifiSso, MethodTypeContext type,
-			String mode, List<MethodParamCacheDTO> params, MethodDTO method) {
+	public MethodCacheDTO putMethod(Integer id, String apiMethodCode, String apiMethodVersion, String status, String verifiSso, MethodTypeContext type,
+			String mode, List<MethodParamCacheDTO> params, MethodDTO method,boolean cache,Integer second) {
 		MethodCacheDTO dto = new MethodCacheDTO( id, apiMethodCode, apiMethodVersion, StringUtils.equals( status, "Y" ),
-				StringUtils.equals( verifiSso, "Y" ), type, mode, params, method );
+				StringUtils.equals( verifiSso, "Y" ), type, mode, params, method,cache,second );
 		GenericServiceFactory.buildGenericService( dto );
 		this.methodCache.put( this.buildKey( apiMethodCode, apiMethodVersion ), dto );
+		return dto;
 	}
 	
 	public String buildKey(String apiMethodCode, String apiMethodVersion) {

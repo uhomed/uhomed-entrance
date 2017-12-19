@@ -2,6 +2,8 @@ package com.uhomed.entrance.biz.request;
 
 import java.util.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
@@ -17,11 +19,11 @@ import com.uhomed.entrance.biz.cache.GenericServiceFactory;
 import com.uhomed.entrance.biz.cache.dto.MethodCacheDTO;
 import com.uhomed.entrance.biz.cache.dto.MethodDubboDTO;
 import com.uhomed.entrance.biz.exception.ParamException;
+import com.uhomed.entrance.core.utils.DateUtils;
 import com.uhomed.entrance.core.utils.common.LoadConfig;
 import com.uhomed.entrance.core.utils.logger.LoggerUtils;
+import com.uhomed.entrance.core.utils.sizeof.RamUsageEstimator;
 import com.xiaoleilu.hutool.util.StrUtil;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author
@@ -46,13 +48,22 @@ public class RequestDubbo implements Request {
 		RpcContext.getContext().setAttachment("encoding",request.getCharacterEncoding());
 
 		Map<String, Object> params = RequestUtil.convertParams( bizParams, methodDTO,request );
-		
+
+		//是否包含缓存  缓存key = (sso + methodName + version + router).hashCode() + "_" + params.hashCode();
+		if(methodDTO.isCache()){
+			Object t = this.getCache(sso,methodDTO.getApiMethodCode(),methodDTO.getApiMethodVersion(),router,params);
+			if(t != null){
+				return t;
+			}
+		}
+
+
 		Registry registry = null;
 		URL url = null;
 		
 		// 是否设置动态路由
 		MethodDubboDTO dubbo = (MethodDubboDTO) methodDTO.getMethodInfo();
-		
+
 		if (StrUtil.isNotEmpty( router )) {
 			RegistryFactory registryFactory = ExtensionLoader.getExtensionLoader( RegistryFactory.class )
 					.getAdaptiveExtension();
@@ -68,8 +79,8 @@ public class RequestDubbo implements Request {
 				e.printStackTrace();
 			}
 		}
-		try {
 
+		try {
 			long rpcTime = System.currentTimeMillis();
 			GenericService genericService = GenericServiceFactory.getInstance( methodDTO.getId().toString() );
 			List<String> types = (List<String>) params.get( "types" );
@@ -82,12 +93,28 @@ public class RequestDubbo implements Request {
 					+ (System.currentTimeMillis() - rpcTime) + "ms]" );
 			if (o != null) {
 				removeMapKeyIfClass( o );
+
+				if(methodDTO.isCache()){
+					RequestCache cache = new RequestCache();
+					cache.setValue(o);
+					cache.setCacheTime(new Date());
+					cache.setExpiredTime(DateUtils.addSecond(new Date(),methodDTO.getSecond()));
+					String key = this.buildCacheKey(sso,methodDTO.getApiMethodCode(),methodDTO.getApiMethodVersion(),router,params);
+//					RequestUtil.CACHE.put(key,cache);
+					RequestCacheUtils.put(key,cache);
+					System.out.println("加入缓存！" + key);
+				}
+
 				return o;
 			}
 		} catch (RpcException e) {
 			result.addObject( "status", false );
 			if (e.getMessage().contains( "Please check if the providers have been started and registered" )) {
-				result.addObject( "message", "未在注册中心发现该接口" );
+				if(StrUtil.isNotEmpty(router)){
+					result.addObject("message","router:" + router + "未发现服务接口");
+				}else {
+					result.addObject( "message", "未在注册中心发现该接口" );
+				}
 			} else if (e.getMessage().contains( "Failed to invoke remote method" )) {
 				result.addObject( "message", "发现服务提供者，未发现该方法" );
 			} else {
@@ -107,7 +134,27 @@ public class RequestDubbo implements Request {
 		}
 		return result;
 	}
-	
+
+	/**
+	 * @param sso
+	 * @param method
+	 * @param version
+	 * @param router
+	 * @param params
+	 * @return
+	 */
+	private Object getCache(String sso,String method,String version,String router,Map<String, Object> params){
+		String key = buildCacheKey(sso, method, version, router, params);
+		return RequestCacheUtils.get(key);
+	}
+
+	private String buildCacheKey(String sso,String method,String version,String router,Map<String, Object> params){
+		StringBuilder key = new StringBuilder();
+		key.append(sso).append(method).append(version).append(router);
+		return key.toString().hashCode() + "_" + params.hashCode();
+	}
+
+
 	/**
 	 * 移除返回map 结构数据 key 为class的值
 	 *
@@ -115,7 +162,7 @@ public class RequestDubbo implements Request {
 	 * @return
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public Object removeMapKeyIfClass(Object object) {
+	private Object removeMapKeyIfClass(Object object) {
 		if (object == null) {
 			return null;
 		}
@@ -147,14 +194,5 @@ public class RequestDubbo implements Request {
 		}
 		
 	}
-	
-	public static void main(String[] args) {
-		Map<String, Object> params = new HashMap<>();
-		params.put( "java.lang.String", "123123" );
-		params.put( "java.lang.String", "321321" );
-		
-		System.out.println( params.keySet().toArray() );
-		System.out.println( params.entrySet().toArray() );
-	}
-	
+
 }

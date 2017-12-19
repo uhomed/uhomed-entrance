@@ -33,10 +33,15 @@ public class MethodCacheDTO implements Serializable {
 	private List<MethodParamCacheDTO>	params;
 	/** dubbo方法信息 */
 	private MethodDTO					methodInfo;
+	/** 是否缓存 */
+	private boolean						cache;
+	/** 缓存秒数 */
+	private Integer						second;
 	
 	/**
 	 * Instantiates a new MethodDTO cache dto.
 	 *
+	 * @param id the id
 	 * @param apiMethodCode the api method code
 	 * @param apiMethodVersion the api method version
 	 * @param status the status
@@ -44,9 +49,13 @@ public class MethodCacheDTO implements Serializable {
 	 * @param type the type
 	 * @param mode the mode
 	 * @param params the params
+	 * @param methodInfo the method info
+	 * @param cache the cache
+	 * @param second the second
 	 */
-	public MethodCacheDTO(Integer id, String apiMethodCode, String apiMethodVersion, boolean status, boolean verifiSso, MethodTypeContext type,
-			String mode, List<MethodParamCacheDTO> params, MethodDTO methodInfo) {
+	public MethodCacheDTO(Integer id, String apiMethodCode, String apiMethodVersion, boolean status, boolean verifiSso,
+			MethodTypeContext type, String mode, List<MethodParamCacheDTO> params, MethodDTO methodInfo, boolean cache,
+			Integer second) {
 		this.id = id;
 		this.apiMethodCode = apiMethodCode;
 		this.apiMethodVersion = apiMethodVersion;
@@ -56,6 +65,44 @@ public class MethodCacheDTO implements Serializable {
 		this.mode = mode;
 		this.params = params;
 		this.methodInfo = methodInfo;
+		this.cache = cache;
+		this.second = second;
+	}
+	
+	/**
+	 * Is cache boolean.
+	 *
+	 * @return the boolean
+	 */
+	public boolean isCache() {
+		return cache;
+	}
+	
+	/**
+	 * Sets cache.
+	 *
+	 * @param cache the cache
+	 */
+	public void setCache(boolean cache) {
+		this.cache = cache;
+	}
+	
+	/**
+	 * Gets second.
+	 *
+	 * @return the second
+	 */
+	public Integer getSecond() {
+		return second;
+	}
+	
+	/**
+	 * Sets second.
+	 *
+	 * @param second the second
+	 */
+	public void setSecond(Integer second) {
+		this.second = second;
 	}
 	
 	/**

@@ -98,7 +98,12 @@ public class GatewayController extends BaseController {
 		} catch (ParamException e) {
 			super.setFailMessage( result, e.getMessage(), "300000" );
 		} catch (Exception e) {
-			super.setFailMessage( result, "网络异常，请稍候再试！", "100001" );
+			if(e.getMessage().concat("ClassCastException") != null){
+				super.setFailMessage( result, "参数转换异常！", "300000" );
+			}else {
+				super.setFailMessage( result, "网络异常，请稍候再试！", "100001" );
+			}
+
 		}
 		return result;
 	}

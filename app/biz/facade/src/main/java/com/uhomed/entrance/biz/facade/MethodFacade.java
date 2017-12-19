@@ -1,5 +1,6 @@
 package com.uhomed.entrance.biz.facade;
 
+import com.uhomed.entrance.biz.cache.dto.MethodCacheDTO;
 import com.uhomed.entrance.core.utils.PageModel;
 import com.uhomed.entrance.dal.result.Result;
 import com.uhomed.entrance.model.MethodDubbo;
@@ -148,5 +149,13 @@ public interface MethodFacade {
 	 * @return
 	 */
 	List<MethodParamView> queryParams(Integer methodId);
-	
+
+	/**
+	 * 初始化缓存，并刷新缓存
+	 * @param method
+	 * @param version
+	 * @return
+	 */
+	MethodCacheDTO getMethodCacheDTO(String method,String version);
+
 }

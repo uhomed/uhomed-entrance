@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.uhomed.entrance.biz.cache.dto.MethodCacheDTO;
 import com.uhomed.entrance.biz.context.MethodParamContext;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
@@ -113,7 +114,7 @@ public class MethodFacadeImpl implements MethodFacade {
 		methodInfo.setMode( mode );
 		methodInfo.setType( type );
 		methodInfo.setId( id );
-
+		
 		int count = (int) this.methodInfoService.update( methodInfo );
 		if (count > 0) {
 			result.setSuccess( true );
@@ -139,11 +140,11 @@ public class MethodFacadeImpl implements MethodFacade {
 					MethodParam param = paramList.get( i );
 					param.setParamIndex( i + 1 );
 					param.setMethodId( id );
-//					param.setClazz(ParamClazzContext.getClazz(param.getParamType()));
-					//TODO Object类型特殊处理
-					if(!param.getParamType().equalsIgnoreCase("Object")){
-						//其他类型默认去取
-						param.setClazz(ParamClazzContext.getClazz(param.getParamType()));
+					// param.setClazz(ParamClazzContext.getClazz(param.getParamType()));
+					// TODO Object类型特殊处理
+					if (!param.getParamType().equalsIgnoreCase( "Object" )) {
+						// 其他类型默认去取
+						param.setClazz( ParamClazzContext.getClazz( param.getParamType() ) );
 					}
 					creates.add( param );
 				}
@@ -224,12 +225,12 @@ public class MethodFacadeImpl implements MethodFacade {
 				for (MethodParam methodParam : paramList) {
 					methodParam.setMethodId( result.getData() );
 					methodParam.setParamIndex( i );
-					//TODO Object类型特殊处理
-					if(!methodParam.getParamType().equalsIgnoreCase("Object")){
-						//其他类型默认去取
-						methodParam.setClazz(ParamClazzContext.getClazz(methodParam.getParamType()));
+					// TODO Object类型特殊处理
+					if (!methodParam.getParamType().equalsIgnoreCase( "Object" )) {
+						// 其他类型默认去取
+						methodParam.setClazz( ParamClazzContext.getClazz( methodParam.getParamType() ) );
 					}
-
+					
 					i++;
 				}
 				this.methodParamService.batchCreate( paramList );
@@ -303,7 +304,7 @@ public class MethodFacadeImpl implements MethodFacade {
 	
 	/**
 	 * param参数转换
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -354,12 +355,12 @@ public class MethodFacadeImpl implements MethodFacade {
 		return result;
 	}
 	
-	private void refreshMethodCache(Integer methodId) {
+	private MethodCacheDTO refreshMethodCache(Integer methodId) {
 		MethodInfo method = this.methodInfoService.findById( methodId );
-		this.refreshMethodCache( method );
+		return this.refreshMethodCache( method );
 	}
 	
-	private void refreshMethodCache(MethodInfo method) {
+	private MethodCacheDTO refreshMethodCache(MethodInfo method) {
 		Map<String, Object> params = new HashMap<>();
 		params.put( "methodId", method.getId() );
 		
@@ -367,11 +368,12 @@ public class MethodFacadeImpl implements MethodFacade {
 			MethodDubbo dubbo = this.methodDubboService.findById( method.getId() );
 			
 			MethodDTO m = new MethodDubboDTO( dubbo.getClassPath(), dubbo.getMethodName() );
-			this.methodCache.putMethod( method.getId(), method.getApiMethodCode(), method.getApiMethodVersion(),
+			return this.methodCache.putMethod( method.getId(), method.getApiMethodCode(), method.getApiMethodVersion(),
 					method.getStatus(), method.getVerifiSso(), MethodTypeContext.DUBBO, method.getMode(),
-					this.methodParam2Cache( this.methodParamService.queryByPage( params, -1, -1 ) ), m );
+					this.methodParam2Cache( this.methodParamService.queryByPage( params, -1, -1 ) ), m,
+					StrUtil.equals( method.getCache(), "Y" ) ? true : false, method.getSecond() );
 		}
-		
+		return null;
 	}
 	
 	@Override
@@ -428,5 +430,18 @@ public class MethodFacadeImpl implements MethodFacade {
 		List<MethodParam> datas = this.methodParamService.queryByPage( params, -1, -1 );
 		
 		return BeanUtil.convertList( datas, MethodParamView.class );
+	}
+	
+	@Override
+	public MethodCacheDTO getMethodCacheDTO(String method, String version) {
+		
+		Map<String, Object> params = new HashMap<>();
+		params.put( "apiMethodCode", method );
+		params.put( "apiMethodVersion", version );
+		MethodInfo info = this.methodInfoService.queryByPO( params );
+		if (info == null) {
+			return null;
+		}
+		return this.refreshMethodCache( info );
 	}
 }
