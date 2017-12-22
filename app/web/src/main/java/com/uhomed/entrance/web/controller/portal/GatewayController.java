@@ -98,11 +98,14 @@ public class GatewayController extends BaseController {
 		} catch (ParamException e) {
 			super.setFailMessage( result, e.getMessage(), "300000" );
 		} catch (Exception e) {
-			if(e.getMessage().concat("ClassCastException") != null){
+			if(e.getMessage().contains("ClassCastException")){
 				super.setFailMessage( result, "参数转换异常！", "300000" );
+			}else if(e.getMessage().contains("org.apache.ibatis.exceptions.PersistenceException")){
+				super.setFailMessage(result,"服务异常，请检查服务报错信息！","300001");
 			}else {
 				super.setFailMessage( result, "网络异常，请稍候再试！", "100001" );
 			}
+			e.printStackTrace();
 
 		}
 		return result;

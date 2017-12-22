@@ -109,10 +109,18 @@ public class RequestUtil {
                         value = tempValue;
                     } else if (p.getClazz() instanceof Number && !(value instanceof Number)) {
                         //兼容  {"test":"123"}
-                        value = TypeUtils.castToJavaBean(value, p.getClazz().getClass());
+                        try{
+                            value = TypeUtils.castToJavaBean(value, p.getClazz().getClass());
+                        } catch (Exception e){
+                            throw new ParamException(p.getName() + "为Number类型，请检查参数类型！");
+                        }
                     } else if (p.getClazz() instanceof Date) {
                         //兼容常用的时间类型
-                        value = TypeUtils.castToDate(value);
+                        try{
+                            value = TypeUtils.castToDate(value);
+                        } catch (Exception e){
+                            throw new ParamException(p.getName() + "为时间类型，请检查参数类型！");
+                        }
                     } else if (p.getClazz() instanceof Boolean) {
                         //容错尝试转换0=false ，1=true
                         try{
@@ -124,7 +132,7 @@ public class RequestUtil {
                                 }
                             }
                         } catch (Exception e){
-                            throw new ParamException(p.getName() + " 参数类型错误！");
+                            throw new ParamException(p.getName() + "为Boolean类型，请检查参数类型！");
                         }
                     } else if (p.getClazz().getClass().getName().equalsIgnoreCase(Object.class.getName())) {
                         // 是否是object类型

@@ -125,6 +125,7 @@ public class RequestDubbo implements Request {
 		} catch (Exception e) {
 			LoggerUtils.defaultPrint( e, "rpc request method [" + methodDTO.getApiMethodCode() + "]" );
 			throw new RpcException( "网络繁忙，请稍候再试！" );
+
 		} finally {
 			if (registry != null) {
 				registry.unregister( url );
