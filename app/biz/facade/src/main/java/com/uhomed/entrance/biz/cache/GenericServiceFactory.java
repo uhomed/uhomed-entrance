@@ -99,6 +99,9 @@ public class GenericServiceFactory {
 			methods.add( methodConfig );
 			reference.setMethods( methods );
 			gs = reference.get();
+			if(gs == null){
+				System.out.println("GSISNULL");
+			}
 			GENERIC_SERVICE.put( genericKey, gs );
 			
 			INIT_RPC_LOGGER.info( "新增rpc远程接口-->" + genericKey );
