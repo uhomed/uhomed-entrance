@@ -1,6 +1,7 @@
 package com.uhomed.entrance.biz.cache.dto;
 
 import com.uhomed.entrance.biz.context.MethodTypeContext;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
  * @author
  * @version $$Id : , v 0.1 Exp $$
  */
+@Data
 public class MethodCacheDTO implements Serializable {
 	
 	private static final long			serialVersionUID	= -5839329860068411060L;
@@ -37,6 +39,8 @@ public class MethodCacheDTO implements Serializable {
 	private boolean						cache;
 	/** 缓存秒数 */
 	private Integer						second;
+	/** 1=并发控制，0=不控制 */
+	private Integer						concurrent;
 	
 	/**
 	 * Instantiates a new MethodDTO cache dto.
@@ -55,7 +59,7 @@ public class MethodCacheDTO implements Serializable {
 	 */
 	public MethodCacheDTO(Integer id, String apiMethodCode, String apiMethodVersion, boolean status, boolean verifiSso,
 			MethodTypeContext type, String mode, List<MethodParamCacheDTO> params, MethodDTO methodInfo, boolean cache,
-			Integer second) {
+			Integer second,Integer concurrent) {
 		this.id = id;
 		this.apiMethodCode = apiMethodCode;
 		this.apiMethodVersion = apiMethodVersion;
@@ -67,203 +71,8 @@ public class MethodCacheDTO implements Serializable {
 		this.methodInfo = methodInfo;
 		this.cache = cache;
 		this.second = second;
+		this.concurrent = concurrent;
 	}
 	
-	/**
-	 * Is cache boolean.
-	 *
-	 * @return the boolean
-	 */
-	public boolean isCache() {
-		return cache;
-	}
-	
-	/**
-	 * Sets cache.
-	 *
-	 * @param cache the cache
-	 */
-	public void setCache(boolean cache) {
-		this.cache = cache;
-	}
-	
-	/**
-	 * Gets second.
-	 *
-	 * @return the second
-	 */
-	public Integer getSecond() {
-		return second;
-	}
-	
-	/**
-	 * Sets second.
-	 *
-	 * @param second the second
-	 */
-	public void setSecond(Integer second) {
-		this.second = second;
-	}
-	
-	/**
-	 * Gets method info.
-	 *
-	 * @return the method info
-	 */
-	public MethodDTO getMethodInfo() {
-		return methodInfo;
-	}
-	
-	/**
-	 * Sets method info.
-	 *
-	 * @param methodInfo the method info
-	 */
-	public void setMethodInfo(MethodDTO methodInfo) {
-		this.methodInfo = methodInfo;
-	}
-	
-	/**
-	 * Gets id.
-	 *
-	 * @return the id
-	 */
-	public Integer getId() {
-		return id;
-	}
-	
-	/**
-	 * Sets id.
-	 *
-	 * @param id the id
-	 */
-	public void setId(Integer id) {
-		this.id = id;
-	}
-	
-	/**
-	 * Gets api method code.
-	 *
-	 * @return the api method code
-	 */
-	public String getApiMethodCode() {
-		return apiMethodCode;
-	}
-	
-	/**
-	 * Sets api method code.
-	 *
-	 * @param apiMethodCode the api method code
-	 */
-	public void setApiMethodCode(String apiMethodCode) {
-		this.apiMethodCode = apiMethodCode;
-	}
-	
-	/**
-	 * Gets api method version.
-	 *
-	 * @return the api method version
-	 */
-	public String getApiMethodVersion() {
-		return apiMethodVersion;
-	}
-	
-	/**
-	 * Sets api method version.
-	 *
-	 * @param apiMethodVersion the api method version
-	 */
-	public void setApiMethodVersion(String apiMethodVersion) {
-		this.apiMethodVersion = apiMethodVersion;
-	}
-	
-	/**
-	 * Is status boolean.
-	 *
-	 * @return the boolean
-	 */
-	public boolean isStatus() {
-		return status;
-	}
-	
-	/**
-	 * Sets status.
-	 *
-	 * @param status the status
-	 */
-	public void setStatus(boolean status) {
-		this.status = status;
-	}
-	
-	/**
-	 * Is verifi sso boolean.
-	 *
-	 * @return the boolean
-	 */
-	public boolean isVerifiSso() {
-		return verifiSso;
-	}
-	
-	/**
-	 * Sets verifi sso.
-	 *
-	 * @param verifiSso the verifi sso
-	 */
-	public void setVerifiSso(boolean verifiSso) {
-		this.verifiSso = verifiSso;
-	}
-	
-	/**
-	 * Gets type.
-	 *
-	 * @return the type
-	 */
-	public MethodTypeContext getType() {
-		return type;
-	}
-	
-	/**
-	 * Sets type.
-	 *
-	 * @param type the type
-	 */
-	public void setType(MethodTypeContext type) {
-		this.type = type;
-	}
-	
-	/**
-	 * Gets mode.
-	 *
-	 * @return the mode
-	 */
-	public String getMode() {
-		return mode;
-	}
-	
-	/**
-	 * Sets mode.
-	 *
-	 * @param mode the mode
-	 */
-	public void setMode(String mode) {
-		this.mode = mode;
-	}
-	
-	/**
-	 * Gets params.
-	 *
-	 * @return the params
-	 */
-	public List<MethodParamCacheDTO> getParams() {
-		return params;
-	}
-	
-	/**
-	 * Sets params.
-	 *
-	 * @param params the params
-	 */
-	public void setParams(List<MethodParamCacheDTO> params) {
-		this.params = params;
-	}
+
 }

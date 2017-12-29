@@ -37,9 +37,9 @@ public class MethodCache {
 	}
 	
 	public MethodCacheDTO putMethod(Integer id, String apiMethodCode, String apiMethodVersion, String status, String verifiSso, MethodTypeContext type,
-			String mode, List<MethodParamCacheDTO> params, MethodDTO method,boolean cache,Integer second) {
+			String mode, List<MethodParamCacheDTO> params, MethodDTO method,boolean cache,Integer second,Integer concurrent) {
 		MethodCacheDTO dto = new MethodCacheDTO( id, apiMethodCode, apiMethodVersion, StringUtils.equals( status, "Y" ),
-				StringUtils.equals( verifiSso, "Y" ), type, mode, params, method,cache,second );
+				StringUtils.equals( verifiSso, "Y" ), type, mode, params, method,cache,second ,concurrent);
 		GenericServiceFactory.buildGenericService( dto );
 		this.methodCache.put( this.buildKey( apiMethodCode, apiMethodVersion ), dto );
 		return dto;

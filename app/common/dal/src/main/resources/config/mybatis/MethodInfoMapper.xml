@@ -16,6 +16,7 @@
         <result property="groupCode" column="GROUP_CODE"/>
         <result property="cache" column="cache"/>
         <result property="second" column="second"/>
+        <result property="concurrent" column="concurrent"/>
 
     </resultMap>
 
@@ -68,7 +69,7 @@
 	</select>
 
     <insert id="add" parameterType="com.uhomed.entrance.model.MethodInfo" useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO `METHOD_INFO` (`API_METHOD_CODE`,`API_METHOD_NAME`,`API_METHOD_VERSION`,`STATUS`,`VERIFI_SSO`,`MODE`,`METHOD_DESC`,`CREATE_TIME`,`TYPE`,`GROUP_CODE`,`CACHE`,`SECOND`) VALUES (#{apiMethodCode},#{apiMethodName},#{apiMethodVersion},#{status},#{verifiSso},#{mode},#{methodDesc},#{createTime},#{type},#{groupCode},#{cache},#{second})
+		INSERT INTO `METHOD_INFO` (`API_METHOD_CODE`,`API_METHOD_NAME`,`API_METHOD_VERSION`,`STATUS`,`VERIFI_SSO`,`MODE`,`METHOD_DESC`,`CREATE_TIME`,`TYPE`,`GROUP_CODE`,`CACHE`,`SECOND`,`CONCURRENT`) VALUES (#{apiMethodCode},#{apiMethodName},#{apiMethodVersion},#{status},#{verifiSso},#{mode},#{methodDesc},#{createTime},#{type},#{groupCode},#{cache},#{second},#{concurrent})
 	</insert>
 
     <delete id="delete" parameterType="com.uhomed.entrance.model.MethodInfo">
@@ -111,6 +112,9 @@
             </if>
             <if test="second != null">
                 `SECOND` = #{second},
+            </if>
+            <if test="concurrent != null">
+                `CONCURRENT` = #{concurrent},
             </if>
         </trim>
         WHERE ID = #{id}

@@ -27,9 +27,9 @@ public class InstantiationTracingBeanPostProcessor implements ApplicationListene
 
         System.out.println("=====================   开始启动自定义服务   =====================");
         //初始化方法
-        this.methodFacade.initCache();
+//        this.methodFacade.initCache();
         //初始化在线参数
-        this.onlineParamsFacade.initCache();
+//        this.onlineParamsFacade.initCache();
 
 		System.out.println("=====================   启动自定义服务完成！  =====================");
     }

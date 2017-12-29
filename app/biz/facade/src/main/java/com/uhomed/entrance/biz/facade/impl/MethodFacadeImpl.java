@@ -371,7 +371,7 @@ public class MethodFacadeImpl implements MethodFacade {
 			return this.methodCache.putMethod( method.getId(), method.getApiMethodCode(), method.getApiMethodVersion(),
 					method.getStatus(), method.getVerifiSso(), MethodTypeContext.DUBBO, method.getMode(),
 					this.methodParam2Cache( this.methodParamService.queryByPage( params, -1, -1 ) ), m,
-					StrUtil.equals( method.getCache(), "Y" ) ? true : false, method.getSecond() );
+					StrUtil.equals( method.getCache(), "Y" ) ? true : false, method.getSecond(),method.getConcurrent() );
 		}
 		return null;
 	}
